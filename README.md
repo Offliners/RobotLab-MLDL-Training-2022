@@ -54,5 +54,7 @@ Links : [[README]()] [[Google Colab]()]
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
 * [Pytorch lightning official tutorials](https://www.pytorchlightning.ai/tutorials)
-* [CS 285 at UC Berkeley - Deep Reinforcement Learning](https://rail.eecs.berkeley.edu/deeprlcourse/)
-* [NTU Machine Learning 2021 Spring(EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
+* [MIT Deep Learning and Artificial Intelligence Lectures](https://deeplearning.mit.edu/)
+* [UC Berkeley Deep Reinforcement Learning (CS285)](https://rail.eecs.berkeley.edu/deeprlcourse/)
+* [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
+* [NTU Applied Deep Learning 2022 Spring (CSIE5431, by Prof. Yun-Nung Chen)](https://www.csie.ntu.edu.tw/~miulab/s110-adl/)
