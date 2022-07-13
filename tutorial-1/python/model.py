@@ -4,10 +4,9 @@ class Neural_Net(nn.Module):
     def __init__(self, input_dim):
         super(Neural_Net, self).__init__()
         self.layers = nn.Sequential(
-            nn.Linear(input_dim, 512),
-            nn.Dropout(0.4),
+            nn.Linear(input_dim, 32),
             nn.LeakyReLU(),
-            nn.Linear(512, 1),
+            nn.Linear(32, 1)
         )
 
     def forward(self, x):
