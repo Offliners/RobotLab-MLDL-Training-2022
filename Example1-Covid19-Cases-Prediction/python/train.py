@@ -14,6 +14,7 @@ from torchsummary import summary
 
 same_seed(cfg['seed'])
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+torch.cuda.empty_cache()
 
 def main():
     os.makedirs('./checkpoints', exist_ok=True)
@@ -22,13 +23,7 @@ def main():
 
     train_data, test_data = pd.read_csv(cfg['train_path']).values, pd.read_csv(cfg['test_path']).values
     train_data, valid_data = train_valid_split(train_data, cfg['split_ratio'], cfg['seed'])
-
-    print(f"""train_data size: {train_data.shape} 
-    valid_data size: {valid_data.shape} 
-    test_data size: {test_data.shape}""")
-
     x_train, x_valid, x_test, y_train, y_valid = select_feature(train_data, valid_data, test_data, cfg['select_features'], cfg['select_all'])
-    print(f'number of features: {x_train.shape[1]}')
 
     train_dataset = COVID19Dataset(x_train, y_train)
     valid_dataset = COVID19Dataset(x_valid, y_valid)
