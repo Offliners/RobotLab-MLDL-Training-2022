@@ -33,23 +33,25 @@ $ conda env remove -n training
 
 ## Tutorial 1 - Covid19 Cases Prediction
 
-Links : [[README]()] [[Google Colab]()] 
+Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 2 - CIFAR 10
 
-Links : [[README]()] [[Google Colab]()] 
+Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 3 - Walking Scene Segmentation
 
-Links : [[README]()] [[Google Colab]()] 
+Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 4 - Anime Face Generation
 
-Links : [[README]()] [[Google Colab]()] 
+Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
-## Tutorial 5 - 2-Dof Robot
+## Tutorial 5 - Lunar Lander
 
-Links : [[README]()] [[Google Colab]()] 
+Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
+
+## Test Content (2022/07/23 released)
 
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
