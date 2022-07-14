@@ -61,9 +61,9 @@ def save_pred(preds, file):
             writer.writerow([i, p])
 
 
-def trainer(args, train_loader, valid_loader, test_loader, model, device):
+def trainer(args, train_loader, valid_loader, model, device):
     criterion = nn.MSELoss(reduction='mean')
-    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), args.lr, (0.9, 0.98), args.weight_decay)
+    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), args.lr, (0.9, 0.98), 1e-8, args.weight_decay)
     scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=args.lr_patience, verbose=True)
 
     writer = SummaryWriter(args.tensorboard)

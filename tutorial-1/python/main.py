@@ -40,7 +40,7 @@ def run(args):
     model = Neural_Net(input_dim=x_train.shape[1]).to(device)
     print(summary(model, x_train.shape))
 
-    trainer(args, train_loader, valid_loader, test_loader, model, device)
+    trainer(args, train_loader, valid_loader, model, device)
 
     model = Neural_Net(input_dim=x_train.shape[1]).to(device)
     model.load_state_dict(torch.load(args.save_model_path))
