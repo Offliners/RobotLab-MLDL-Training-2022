@@ -33,6 +33,8 @@ $ conda env remove -n training
 
 ## Tutorial 1 - Covid19 Cases Prediction
 
+Dataset Resource : [Delphi group @ CMU](https://delphi.cmu.edu/covid19/ctis/)
+
 Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 2 - CIFAR 10
