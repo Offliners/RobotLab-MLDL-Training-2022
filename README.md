@@ -32,6 +32,7 @@ $ conda env remove -n training
 ```
 
 ## Tutorial 1 - Covid19 Cases Prediction
+![demo](./tutorial-1/img/tutorial-1-correlation-analysis.png)
 
 Dataset Resource : [Delphi group @ CMU](https://delphi.cmu.edu/covid19/ctis/)
 
