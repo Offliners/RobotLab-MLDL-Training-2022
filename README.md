@@ -33,7 +33,7 @@ $ conda env remove -n training
 
 ## Tutorial 1 - Covid19 Cases Prediction
 
-Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 2 - CIFAR 10
 
