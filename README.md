@@ -46,6 +46,8 @@ Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 ## Tutorial 4 - Anime Face Generation
 ![demo](./tutorial-4/img/tutorial-4-demo.gif)
 
+Dataset Resource : [Crypko](https://crypko.ai/#)
+
 Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 5 - Lunar Lander
