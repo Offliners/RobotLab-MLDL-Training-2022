@@ -105,7 +105,7 @@ def trainer(args, train_loader, valid_loader, test_loader, model, device):
             
         mean_valid_loss = sum(valid_losses) / len(valid_losses)
         print(f'Epoch [{epoch+1}/{epochs}]: Train loss: {mean_train_loss:.4f}, Valid loss: {mean_valid_loss:.4f}')
-        writer.add_scalars('Loss/', {'train_loss': mean_train_loss, 'val_loss': mean_valid_loss}, step)
+        writer.add_scalars('Loss', {'train_loss': mean_train_loss, 'val_loss': mean_valid_loss}, step)
 
         scheduler.step(mean_valid_loss)
         if mean_valid_loss < best_loss:
