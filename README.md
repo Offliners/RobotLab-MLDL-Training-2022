@@ -10,7 +10,7 @@ Report : [pdf](20220723_training.pdf)
 * CUDA 11.3
 * Pytorch 1.11
 
-## Usage
+## Usage (run on local machine)
 ```shell
 # 使用Anaconda建立名為training的虛擬環境
 $ conda create --name training python=3.8.13
