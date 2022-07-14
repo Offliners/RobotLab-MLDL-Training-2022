@@ -1,4 +1,5 @@
 # Tutorial 4 - Anime Face Generation
+![demo](./img/tutorial-4-demo.gif)
 
 ## Usage
 在本機端開始訓練

@@ -8,7 +8,6 @@ from tqdm import tqdm
 from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from models import Generator, Discriminator
-from torchsummary import summary
 
 def same_seed(seed): 
     torch.backends.cudnn.deterministic = True
@@ -24,8 +23,9 @@ def trainer(args, dataset, writer, device):
     z_dim = args.z_dim
     z_sample = Variable(torch.randn(100, z_dim)).to(device)
 
-    G = Generator(in_dim=z_dim).cuda()
-    D = Discriminator(3).cuda()
+    G = Generator(in_dim=z_dim).to(device)
+    D = Discriminator(3).to(device)
+
     G.train()
     D.train()
 
@@ -40,7 +40,7 @@ def trainer(args, dataset, writer, device):
         progress_bar = tqdm(dataloader)
         for _, data in enumerate(progress_bar):
             imgs = data
-            imgs = imgs.cuda()
+            imgs = imgs.to(device)
 
             bs = imgs.size(0)
 
