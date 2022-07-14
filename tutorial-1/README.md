@@ -2,12 +2,15 @@
 
 ## Feature Selection
 特徵相關性矩陣
+
 ![Correlation Matrix](./img/tutorial-1-correlation-matrix.png)
 
 使用相關係數來選取重要特徵(Threshold : 0.8)
+
 ![Feature Analysis](./img/tutorial-1-correlation-analysis.png)
 
 模型訓練完畢後，比較預測結果與實際結果是否相近
+
 ![Ground Truth vs. Prediction](./img/tutorial-1-prediction-result.png)
 
 ## Usage
