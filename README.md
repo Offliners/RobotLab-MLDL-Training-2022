@@ -36,7 +36,7 @@ $ conda env remove -n training
 
 Dataset Resource : [Delphi group @ CMU](https://delphi.cmu.edu/covid19/ctis/)
 
-Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/colab/tutorial-1.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-1/colab/tutorial-1.ipynb)]
 
 ## Tutorial 2 - CIFAR 10
 
