@@ -38,9 +38,9 @@ Dataset Resource : [Delphi group @ CMU](https://delphi.cmu.edu/covid19/ctis/)
 
 Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/colab/tutorial-1.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-1/colab/tutorial-1.ipynb)]
 
-## Tutorial 2 - CIFAR 10
+## Tutorial 2 - CIFAR10
 
-Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 3 - Walking Scene Segmentation
 
@@ -64,5 +64,5 @@ Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 * [Pytorch lightning official tutorials](https://www.pytorchlightning.ai/tutorials)
 * [MIT Deep Learning and Artificial Intelligence Lectures](https://deeplearning.mit.edu/)
 * [UC Berkeley Deep Reinforcement Learning (CS285)](https://rail.eecs.berkeley.edu/deeprlcourse/)
-* [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
+* [NTU Machine Learning 2022 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
 * [NTU Applied Deep Learning 2022 Spring (CSIE5431, by Prof. Yun-Nung Chen)](https://www.csie.ntu.edu.tw/~miulab/s110-adl/)

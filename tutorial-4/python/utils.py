@@ -1,5 +1,6 @@
 import os
 import cv2
+import time
 import torch
 import torchvision
 import numpy as np
@@ -36,6 +37,7 @@ def trainer(args, dataset, writer, device):
     dataloader = DataLoader(dataset, batch_size=args.train_batchsize, shuffle=True, num_workers=2)
 
     steps = 0
+    start_time = time.time()
     for e, epoch in enumerate(range(args.epoch)):
         progress_bar = tqdm(dataloader)
         for _, data in enumerate(progress_bar):
@@ -95,7 +97,9 @@ def trainer(args, dataset, writer, device):
         torch.save(G.state_dict(), args.save_g_model_path)
         torch.save(D.state_dict(), args.save_d_model_path)
     
+    end_time = time.time()
     writer.close()
+    print(f'Time usgae : {format_time(end_time - start_time)}')
 
 
 def generate_video(image_path, output_video, video_name):
@@ -111,3 +115,35 @@ def generate_video(image_path, output_video, video_name):
         video.write(cv2.imread(os.path.join(image_path, image)))
 
     video.release()
+
+def format_time(seconds):
+    days = int(seconds / 3600/24)
+    seconds = seconds - days*3600*24
+    hours = int(seconds / 3600)
+    seconds = seconds - hours*3600
+    minutes = int(seconds / 60)
+    seconds = seconds - minutes*60
+    secondsf = int(seconds)
+    seconds = seconds - secondsf
+    millis = int(seconds*1000)
+
+    f = ''
+    i = 1
+    if days > 0:
+        f += str(days) + 'D'
+        i += 1
+    if hours > 0 and i <= 2:
+        f += str(hours) + 'h'
+        i += 1
+    if minutes > 0 and i <= 2:
+        f += str(minutes) + 'm'
+        i += 1
+    if secondsf > 0 and i <= 2:
+        f += str(secondsf) + 's'
+        i += 1
+    if millis > 0 and i <= 2:
+        f += str(millis) + 'ms'
+        i += 1
+    if f == '':
+        f = '0ms'
+    return f

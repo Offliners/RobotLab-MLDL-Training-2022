@@ -15,6 +15,10 @@ if torch.cuda.is_available():
 def run(args):
     same_seed(args.seed)
 
+    if not os.path.isdir(args.train_path):
+        print('Dataset not found!')
+        exit(1)
+
     dataset = get_dataset(args.train_path)
 
     writer = SummaryWriter(args.tensorboard)

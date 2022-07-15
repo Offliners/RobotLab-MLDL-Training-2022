@@ -3,7 +3,7 @@ import argparse
 def parse():
     parser = argparse.ArgumentParser(description="Robotlab MLDL Training Tutorial 4 - Anime Face Generation")
     parser.add_argument('--seed', type=int, default=3366, help='Set random seed')
-    parser.add_argument('--epoch', type=int, default=200, help='Set training epochs')
+    parser.add_argument('--epoch', type=int, default=100, help='Set training epochs')
     parser.add_argument('--n_critic', type=int, default=1, help='Set number of critics')
     parser.add_argument('--z_dim', type=int, default=100, help='Set the dimension of z space')
     parser.add_argument('--train_batchsize', type=int, default=64, help='Set training batchsize')

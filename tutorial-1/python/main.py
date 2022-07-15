@@ -57,4 +57,8 @@ if __name__ == "__main__":
     os.makedirs('./output', exist_ok=True)
     os.makedirs(args.tensorboard, exist_ok=True)
 
+    if not os.path.isdir('./data'):
+        print('Dataset not found!')
+        exit(1)
+
     run(args)
