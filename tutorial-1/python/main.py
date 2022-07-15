@@ -11,7 +11,8 @@ from model import Neural_Net
 from utils import same_seed, calc_feature_correlation, train_valid_split, select_feature, trainer, predict, save_pred
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-torch.cuda.empty_cache()
+if torch.cuda.is_available():
+    torch.cuda.empty_cache()
 
 def run(args):
     same_seed(args.seed)

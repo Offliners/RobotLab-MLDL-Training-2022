@@ -9,7 +9,8 @@ from utils import same_seed, trainer, generate_video
 from dataset import get_dataset
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-torch.cuda.empty_cache()
+if torch.cuda.is_available():
+    torch.cuda.empty_cache()
 
 def run(args):
     same_seed(args.seed)
