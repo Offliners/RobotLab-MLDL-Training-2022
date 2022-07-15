@@ -1,8 +1,10 @@
 import numpy as np
 import torch
 from tqdm import tqdm
+from dataset import PseudoDataset
 import torch.nn as nn
-from torch.utils.data import DataLoader, ConcatDataset, Dataset, Subset
+from torch.utils.data import DataLoader, ConcatDataset, Subset
+from torch.utils.tensorboard import SummaryWriter
 
 def same_seed(seed): 
     torch.backends.cudnn.deterministic = True
@@ -12,18 +14,6 @@ def same_seed(seed):
     if torch.cuda.is_available():
         torch.cuda.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
-
-
-class PseudoDataset(Dataset):
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-
-    def __len__(self):
-        return len(self.y)
-
-    def __getitem__(self, id):
-        return self.x[id][0], self.y[id]
 
 
 def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
@@ -38,8 +28,8 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
         img, _ = batch
         with torch.no_grad():
             logits = model(img.to(device))
-        probs = softmax(logits)
 
+        probs = softmax(logits)
         for j, x in enumerate(probs):
             if torch.max(x) > threshold:
                 idx.append(i * batch_size + j)
@@ -54,7 +44,9 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
 
 def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device):
     criterion = nn.CrossEntropyLoss()
-    optimizer = getattr(torch.optim, args['optimizer'])(model.parameters(), args['lr'], (0.9, 0.98), 1e-8, args['weight_decay'])
+    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), lr=args.lr, betas=(0.9, 0.98), weight_decay=args.weight_decay)
+
+    writer = SummaryWriter(args.tensorboard)
 
     n_epochs = args.epoch
     best_acc = 0.0
@@ -91,7 +83,6 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
         model.eval()
         valid_loss = []
         valid_accs = []
-
         for batch in tqdm(valid_loader):
             imgs, labels = batch
 
@@ -110,6 +101,30 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
         if valid_acc > best_acc:
             best_acc = valid_acc
             torch.save(model.state_dict(), args.save_model_path)
-            print('saving model with acc {:.5f}'.format(best_acc))
+            print('Saving model with acc {:.5f}'.format(best_acc))
 
         print(f"[ Valid | {epoch + 1:03d}/{n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}")
+
+        writer.add_scalars('Accuracy', {'train_acc': train_acc, 'val_acc': valid_acc}, epoch)
+        writer.add_scalars('Loss', {'train_loss': train_loss, 'val_loss': valid_loss}, epoch)
+    
+    writer.close()
+
+
+def predict(args, test_loader, model, device):
+    model.eval()
+    predictions = []
+
+    for batch in tqdm(test_loader):
+        imgs, labels = batch
+
+        with torch.no_grad():
+            logits = model(imgs.to(device))
+            
+        predictions.extend(logits.argmax(dim=-1).cpu().numpy().tolist())
+
+    with open(args.save_csv_path, "w") as f:
+        f.write("Id,Category\n")
+
+        for i, pred in  enumerate(predictions):
+            f.write(f"{i},{pred}\n")

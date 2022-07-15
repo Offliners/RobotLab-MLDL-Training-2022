@@ -1,7 +1,8 @@
 import os
 from PIL import Image
 from opt import parse
-from utils import same_seed, trainer
+from utils import same_seed, trainer, predict
+from model import Classifier
 
 import torch
 from torch.utils.data import DataLoader
@@ -17,25 +18,39 @@ if torch.cuda.is_available():
 def run(args):
     same_seed(args.seed)
 
+    means = [0.485, 0.456, 0.406]
+    stds = [0.229, 0.224, 0.225]
     train_tfm = transforms.Compose([
-        transforms.Resize((128, 128)),
+        transforms.RandomRotation(40),
+        transforms.RandomAffine(degrees=0, translate=(0.2, 0.2), shear=0.2),
+        transforms.RandomHorizontalFlip(p=0.5),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(means, stds)
     ])
 
     test_tfm = transforms.Compose([
-        transforms.Resize((128, 128)),
+        transforms.Resize((224, 224)),
         transforms.ToTensor(),
+        transforms.Normalize(means, stds)
     ])
 
-    train_set = DatasetFolder("food-11/training/labeled", loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
-    valid_set = DatasetFolder("food-11/validation", loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
-    unlabeled_set = DatasetFolder("food-11/training/unlabeled", loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
-    test_set = DatasetFolder("food-11/testing", loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
+    train_set = DatasetFolder(args.train_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
+    valid_set = DatasetFolder(args.unlabeled_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
+    unlabeled_set = DatasetFolder(args.valid_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
+    test_set = DatasetFolder(args.test_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
 
     train_loader = DataLoader(train_set, batch_size=args.train_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
     valid_loader = DataLoader(valid_set, batch_size=args.val_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=args.test_batchsize, shuffle=False)
-    
+
+    model = Classifier().to(device)
+    print(summary(model, (3, 224, 224)))
+
+    trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device)
+
+    model.load_state_dict(torch.load(args.save_model_path))
+    predict(args, test_loader, model, device)
 
 
 if __name__ == "__main__":
