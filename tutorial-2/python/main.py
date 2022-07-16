@@ -22,9 +22,7 @@ def run(args):
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
     train_tfm = transforms.Compose([
-        transforms.RandomRotation(30),
         transforms.RandomResizedCrop((224, 224)),
-        transforms.RandomHorizontalFlip(),
         ImageNetPolicy(),
         transforms.ToTensor(),
         transforms.Normalize(means, stds)

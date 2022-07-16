@@ -1,8 +1,10 @@
 import numpy as np
+import time
 import torch
 from tqdm import tqdm
 from dataset import PseudoDataset
 import torch.nn as nn
+from torch.autograd import Variable
 from torch.utils.data import DataLoader, ConcatDataset, Subset
 from torch.utils.tensorboard import SummaryWriter
 
@@ -45,17 +47,14 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
     return dataset
 
 
-def mixup_data(x, y, alpha=1.0, use_cuda=True):
+def mixup_data(x, y, device, alpha=1.0):
     if alpha > 0:
         lam = np.random.beta(alpha, alpha)
     else:
         lam = 1
 
     batch_size = x.size()[0]
-    if use_cuda:
-        index = torch.randperm(batch_size).cuda()
-    else:
-        index = torch.randperm(batch_size)
+    index = torch.randperm(batch_size).to(device)
 
     mixed_x = lam * x + (1 - lam) * x[index, :]
     y_a, y_b = y, y[index]
@@ -74,6 +73,7 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
 
     n_epochs = args.epoch
     best_acc = 0.0
+    start_time = time.time()
     for epoch in range(n_epochs):
         print(f'Epoch [{epoch + 1}/{n_epochs}]')
         if args.do_semi and best_acc > args.start_pseudo_threshold:
@@ -88,8 +88,11 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
         for batch in tqdm(train_loader):
             imgs, labels = batch
 
-            logits = model(imgs.to(device))
-            loss = criterion(logits, labels.to(device))
+            inputs, targets_a, targets_b, lam = mixup_data(imgs, labels, device, args.alpha)
+            inputs, targets_a, targets_b = map(Variable, (inputs, targets_a, targets_b))
+
+            logits = model(inputs.to(device))
+            loss = mixup_criterion(criterion, logits.to(device), targets_a.to(device), targets_b.to(device), lam)
 
             optimizer.zero_grad()
             loss.backward()
@@ -134,7 +137,9 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
         writer.add_scalars('Accuracy', {'train_acc': train_acc, 'val_acc': valid_acc}, epoch)
         writer.add_scalars('Loss', {'train_loss': train_loss, 'val_loss': valid_loss}, epoch)
     
+    end_time = time.time()
     writer.close()
+    print(f'Time usgae : {format_time(end_time - start_time)}')
 
 
 def predict(args, test_loader, model, device):
@@ -156,3 +161,36 @@ def predict(args, test_loader, model, device):
             f.write(f"{i},{pred}\n")
     
     print('Done!')
+
+
+def format_time(seconds):
+    days = int(seconds / 3600/24)
+    seconds = seconds - days*3600*24
+    hours = int(seconds / 3600)
+    seconds = seconds - hours*3600
+    minutes = int(seconds / 60)
+    seconds = seconds - minutes*60
+    secondsf = int(seconds)
+    seconds = seconds - secondsf
+    millis = int(seconds*1000)
+
+    f = ''
+    i = 1
+    if days > 0:
+        f += str(days) + 'D'
+        i += 1
+    if hours > 0 and i <= 2:
+        f += str(hours) + 'h'
+        i += 1
+    if minutes > 0 and i <= 2:
+        f += str(minutes) + 'm'
+        i += 1
+    if secondsf > 0 and i <= 2:
+        f += str(secondsf) + 's'
+        i += 1
+    if millis > 0 and i <= 2:
+        f += str(millis) + 'ms'
+        i += 1
+    if f == '':
+        f = '0ms'
+    return f
