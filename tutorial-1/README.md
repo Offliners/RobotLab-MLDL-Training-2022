@@ -43,6 +43,9 @@ python/
             Loss_val_loss/
     output/
         pred.csv
+    data/
+        test.csv
+        train.csv
 ```
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2022spring-hw1)看表現如何
