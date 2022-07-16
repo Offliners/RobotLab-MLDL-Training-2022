@@ -2,7 +2,8 @@ import os
 from PIL import Image
 from opt import parse
 from utils import same_seed, trainer, predict
-from models import select_model
+from models import modelEnsemble
+import ttach as tta
 from randaugment import ImageNetPolicy
 
 import torch
@@ -23,6 +24,7 @@ def run(args):
     stds = [0.229, 0.224, 0.225]
     train_tfm = transforms.Compose([
         transforms.RandomResizedCrop((224, 224)),
+        transforms.RandomHorizontalFlip(),
         ImageNetPolicy(),
         transforms.ToTensor(),
         transforms.Normalize(means, stds)
@@ -43,13 +45,20 @@ def run(args):
     valid_loader = DataLoader(valid_set, batch_size=args.val_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=args.test_batchsize, shuffle=False)
 
-    model = select_model(args.model_name, args.pretrained).to(device)
-    print(summary(model, (3, 224, 224)))
+    ensemble_model = modelEnsemble('vgg16', 'resnet18', 'densenet121').to(device)
+    for param in ensemble_model.parameters():
+        param.requires_grad = False
 
-    trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device)
+    for param in ensemble_model.classifier.parameters():
+        param.requires_grad = True 
 
-    model.load_state_dict(torch.load(args.save_model_path))
-    predict(args, test_loader, model, device)
+    print(summary(ensemble_model, (3, 224, 224)))
+
+    trainer(args, train_set, unlabeled_set, train_loader, valid_loader, ensemble_model, device)
+
+    ensemble_model.load_state_dict(torch.load(args.save_model_path))
+    tta_model = tta.ClassificationTTAWrapper(ensemble_model, tta.aliases.five_crop_transform(224, 224))
+    predict(args, test_loader, tta_model, device)
 
 
 if __name__ == "__main__":
