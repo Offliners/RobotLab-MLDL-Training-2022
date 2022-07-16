@@ -6,7 +6,7 @@ def parse():
     parser.add_argument('--epoch', type=int, default=20, help='Set training epochs')
     parser.add_argument('--do_semi', type=bool, default=True, help='Whether to do semi-supervised learning')
     parser.add_argument('--pseudo_label_threshold', type=float, default=0.9, help='Set threshold of pseudo labels')
-    parser.add_argument('--start_pseudo_threshold', type=float, default=0.07, help='Set accuracy threshold of using pseudo labels')
+    parser.add_argument('--start_pseudo_threshold', type=float, default=0.7, help='Set accuracy threshold of using pseudo labels')
     parser.add_argument('--num_worker', type=int, default=8, help='Set number of worker')
     parser.add_argument('--train_batchsize', type=int, default=128, help='Set training batchsize')
     parser.add_argument('--val_batchsize', type=int, default=128, help='Set validation batchsize')

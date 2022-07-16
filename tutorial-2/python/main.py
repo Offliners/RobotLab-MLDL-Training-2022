@@ -36,8 +36,8 @@ def run(args):
     ])
 
     train_set = DatasetFolder(args.train_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
-    valid_set = DatasetFolder(args.unlabeled_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
-    unlabeled_set = DatasetFolder(args.valid_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
+    valid_set = DatasetFolder(args.valid_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
+    unlabeled_set = DatasetFolder(args.unlabeled_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=train_tfm)
     test_set = DatasetFolder(args.test_dir, loader=lambda x: Image.open(x), extensions="jpg", transform=test_tfm)
 
     train_loader = DataLoader(train_set, batch_size=args.train_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
