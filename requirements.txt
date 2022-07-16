@@ -5,6 +5,8 @@ pandas
 opencv-python
 tqdm
 torchsummary
+randaugment
+pytorchcv
 gdown
 tensorboard
 

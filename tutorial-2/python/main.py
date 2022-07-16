@@ -2,7 +2,8 @@ import os
 from PIL import Image
 from opt import parse
 from utils import same_seed, trainer, predict
-from model import Classifier
+from models import select_model
+from randaugment import ImageNetPolicy
 
 import torch
 from torch.utils.data import DataLoader
@@ -21,10 +22,10 @@ def run(args):
     means = [0.485, 0.456, 0.406]
     stds = [0.229, 0.224, 0.225]
     train_tfm = transforms.Compose([
-        transforms.RandomRotation(40),
-        transforms.RandomAffine(degrees=0, translate=(0.2, 0.2), shear=0.2),
-        transforms.RandomHorizontalFlip(p=0.5),
-        transforms.Resize((224, 224)),
+        transforms.RandomRotation(30),
+        transforms.RandomResizedCrop((224, 224)),
+        transforms.RandomHorizontalFlip(),
+        ImageNetPolicy(),
         transforms.ToTensor(),
         transforms.Normalize(means, stds)
     ])
@@ -44,7 +45,7 @@ def run(args):
     valid_loader = DataLoader(valid_set, batch_size=args.val_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=args.test_batchsize, shuffle=False)
 
-    model = Classifier().to(device)
+    model = select_model(args.model_name, args.pretrained).to(device)
     print(summary(model, (3, 224, 224)))
 
     trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device)
