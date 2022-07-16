@@ -1,10 +1,12 @@
 import numpy as np
 import time
+import os
 import torch
 from tqdm import tqdm
 from dataset import PseudoDataset
 import torch.nn as nn
-from torch.utils.data import DataLoader, ConcatDataset, Subset
+import torch.nn.functional as F
+from torch.utils.data import DataLoader, Subset
 from torch.utils.tensorboard import SummaryWriter
 
 def same_seed(seed): 
@@ -46,10 +48,16 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
     return dataset
 
 
-def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device):
-    criterion = nn.CrossEntropyLoss()
-    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
-    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=args.gamma, verbose=True)
+def loss_fn_kd(outputs, labels, teacher_outputs, T=20, alpha=0.5):
+    hard_loss = F.cross_entropy(outputs, labels) * (1. - alpha) 
+
+    soft_loss = F.kl_div(F.log_softmax(outputs / T , dim=1) , F.softmax(teacher_outputs / T, dim=1), reduction='batchmean') * alpha * (T ** 2)
+    return hard_loss + soft_loss
+
+
+def trainer(args, train_loader, valid_loader, teacher_model, student_model, device, student_index):
+    optimizer = getattr(torch.optim, args.optimizer)(student_model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.period, verbose=True)
 
     writer = SummaryWriter(args.tensorboard)
 
@@ -57,25 +65,25 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
     best_acc = 0.0
     start_time = time.time()
     for epoch in range(n_epochs):
-        print(f'Epoch [{epoch + 1}/{n_epochs}]')
-        if args.do_semi and best_acc > args.start_pseudo_threshold:
-            pseudo_set = get_pseudo_labels(unlabeled_set, model, args.train_batchsize, device)
-            concat_dataset = ConcatDataset([train_set, pseudo_set])
-            train_loader = DataLoader(concat_dataset, batch_size=args.train_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True, drop_last=True)
+        print(f'Student {student_index} Training Epoch [{epoch + 1}/{n_epochs}]')
 
-        model.train()
+        student_model.train()
 
         train_loss = []
         train_accs = []
         for batch in tqdm(train_loader):
             imgs, labels = batch
 
-            logits = model(imgs.to(device))
-            loss = criterion(logits, labels.to(device))
+            logits = student_model(imgs.to(device))
+
+            with torch.no_grad():
+                soft_labels = teacher_model(imgs.to(device))
+
+            loss = loss_fn_kd(logits, labels.to(device), soft_labels)
 
             optimizer.zero_grad()
             loss.backward()
-            grad_norm = nn.utils.clip_grad_norm_(model.parameters(), max_norm=10)
+            grad_norm = nn.utils.clip_grad_norm_(student_model.parameters(), max_norm=10)
             optimizer.step()
             acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
 
@@ -87,16 +95,17 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
 
         print(f"[ Train | {epoch + 1:03d}/{n_epochs:03d} ] loss = {train_loss:.5f}, acc = {train_acc:.5f}")
 
-        model.eval()
+        student_model.eval()
         valid_loss = []
         valid_accs = []
         for batch in tqdm(valid_loader):
             imgs, labels = batch
 
             with torch.no_grad():
-                logits = model(imgs.to(device))
+                logits = student_model(imgs.to(device))
+                soft_labels = teacher_model(imgs.to(device))
 
-            loss = criterion(logits, labels.to(device))
+            loss = loss_fn_kd(logits, labels.to(device), soft_labels)
             acc = (logits.argmax(dim=-1) == labels.to(device)).float().mean()
 
             valid_loss.append(loss.item())
@@ -109,20 +118,52 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
 
         if valid_acc > best_acc:
             best_acc = valid_acc
-            model.save(args.save_model_path)
+            torch.save(student_model.state_dict(), os.path.join(args.save_student_model_dir, f'model_{student_index}.pth'))
             print('Saving model with valid acc {:.5f}'.format(best_acc))
 
         print()
 
-        writer.add_scalars('Accuracy', {'train_acc': train_acc, 'val_acc': valid_acc}, epoch)
-        writer.add_scalars('Loss', {'train_loss': train_loss, 'val_loss': valid_loss}, epoch)
+        writer.add_scalars('Accuracy', {f'{student_index}_train_acc': train_acc, f'{student_index}_val_acc': valid_acc}, epoch)
+        writer.add_scalars('Loss', {f'{student_index}_train_loss': train_loss, f'{student_index}_val_loss': valid_loss}, epoch)
     
     end_time = time.time()
     writer.close()
     print(f'Time usgae : {format_time(end_time - start_time)}')
 
 
-def predict(args, test_loader, model, device):
+def tta_predict(test_loader, model, device, alpha, output_path):
+    model.eval()
+    predictions = []
+
+    for batch in tqdm(test_loader):
+        img_list, _ = batch
+        test_pred = []
+
+        with torch.no_grad():
+            for imgs in img_list:
+                test_imgs = imgs[0].unsqueeze(0)
+                origin_logit = model(test_imgs.to(device)).squeeze(0)
+                
+                tta_logit = model(imgs[1:].to(device))
+                tta_logit = torch.mean(tta_logit, 0)
+
+                logit = (alpha * origin_logit) + ((1 - alpha) * tta_logit)
+                test_pred.append(logit)
+            
+        test_preds = torch.stack(test_pred)
+        test_label = np.argmax(test_preds.cpu().data.numpy(), axis=1)
+        predictions += test_label.tolist()
+
+    with open(output_path, "w") as f:
+        f.write("Id,Category\n")
+
+        for i, pred in enumerate(predictions):
+            f.write(f"{i},{pred}\n")
+
+    print('Done!')
+
+
+def predict(test_loader, model, device, output_path):
     model.eval()
     predictions = []
 
@@ -134,10 +175,10 @@ def predict(args, test_loader, model, device):
             
         predictions.extend(logits.argmax(dim=-1).cpu().numpy().tolist())
 
-    with open(args.save_csv_path, "w") as f:
+    with open(output_path, "w") as f:
         f.write("Id,Category\n")
 
-        for i, pred in  enumerate(predictions):
+        for i, pred in enumerate(predictions):
             f.write(f"{i},{pred}\n")
     
     print('Done!')

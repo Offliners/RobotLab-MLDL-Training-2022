@@ -1,21 +1,24 @@
 import torch
 import torch.nn as nn
-from pytorchcv.model_provider import get_model as ptcv_get_model
 
-# Model list is available : https://github.com/osmr/imgclsmob/blob/master/pytorch/pytorchcv/model_provider.py
-def select_model(model_name, pretrained):
-    model = ptcv_get_model(model_name, pretrained=pretrained)
+# Model list is available : https://pytorch.org/vision/0.11/models.html
+def select_model(model_name, pretrained=False):
+    model = torch.hub.load('pytorch/vision:v0.11.0', model_name, pretrained=pretrained, num_classes=11)
 
     return model
 
 
 class modelEnsemble(nn.Module):   
-    def __init__(self, modelA, modelB, modelC, pretrained, out_dim=11):
+    def __init__(self, save_names, save_paths, dim=11):
         super(modelEnsemble, self).__init__()
-        self.modelA = select_model(modelA, pretrained)
-        self.modelB = select_model(modelB, pretrained)
-        self.modelC = select_model(modelC, pretrained)
-        self.classifier = nn.Linear(1000 * 3, out_dim)
+        self.modelA = select_model(save_names[0])
+        self.modelA.load_state_dict(torch.load(save_paths[0]))
+        self.modelB = select_model(save_names[1])
+        self.modelB.load_state_dict(torch.load(save_paths[1]))
+        self.modelC = select_model(save_names[2])
+        self.modelC.load_state_dict(torch.load(save_paths[2]))
+
+        self.classifier = nn.Linear(dim * 3, dim)
         
     def forward(self, x):
         x1 = self.modelA(x)
@@ -25,16 +28,3 @@ class modelEnsemble(nn.Module):
         out = self.classifier(x)
         
         return out
-
-    def save(self, save_path):
-        torch.save({
-            'modelA' : self.modelA.state_dict(),
-            'modelB' : self.modelB.state_dict(),
-            'modelC' : self.modelC.state_dict()
-        }, save_path)
-    
-    def load(self, save_path):
-        checkpoint = torch.load(save_path)
-        self.modelA.load_state_dict(checkpoint['modelA'])
-        self.modelB.load_state_dict(checkpoint['modelB'])
-        self.modelC.load_state_dict(checkpoint['modelC'])
