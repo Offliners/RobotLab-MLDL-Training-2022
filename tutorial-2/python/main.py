@@ -45,7 +45,7 @@ def run(args):
     valid_loader = DataLoader(valid_set, batch_size=args.val_batchsize, shuffle=True, num_workers=args.num_worker, pin_memory=True)
     test_loader = DataLoader(test_set, batch_size=args.test_batchsize, shuffle=False)
 
-    ensemble_model = modelEnsemble('vgg16', 'resnet18', 'densenet121').to(device)
+    ensemble_model = modelEnsemble('bn_vgg16', 'resnet18', 'densenet121', args.pretrained).to(device)
     for param in ensemble_model.parameters():
         param.requires_grad = False
 
@@ -56,9 +56,11 @@ def run(args):
 
     trainer(args, train_set, unlabeled_set, train_loader, valid_loader, ensemble_model, device)
 
-    ensemble_model.load_state_dict(torch.load(args.save_model_path))
-    tta_model = tta.ClassificationTTAWrapper(ensemble_model, tta.aliases.five_crop_transform(224, 224))
-    predict(args, test_loader, tta_model, device)
+    ensemble_model.load(args.save_model_path)
+    if args.use_tta:
+        ensemble_model = tta.ClassificationTTAWrapper(ensemble_model, tta.aliases.five_crop_transform(224, 224))
+    
+    predict(args, test_loader, ensemble_model, device)
 
 
 if __name__ == "__main__":

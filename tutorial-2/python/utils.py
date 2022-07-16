@@ -48,14 +48,13 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
 
 def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, device):
     criterion = nn.CrossEntropyLoss()
-    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), lr=args.lr, betas=(0.9, 0.98), weight_decay=args.weight_decay)
-    scheduler = torch.optim.lr_scheduler.ReduceLROnPlateau(optimizer, mode='min', factor=0.5, patience=args.lr_patience, verbose=True)
+    optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    scheduler = torch.optim.lr_scheduler.ExponentialLR(optimizer, gamma=args.gamma, verbose=True)
 
     writer = SummaryWriter(args.tensorboard)
 
     n_epochs = args.epoch
     best_acc = 0.0
-    early_stop_count = 0
     start_time = time.time()
     for epoch in range(n_epochs):
         print(f'Epoch [{epoch + 1}/{n_epochs}]')
@@ -106,25 +105,17 @@ def trainer(args, train_set, unlabeled_set, train_loader, valid_loader, model, d
         valid_loss = sum(valid_loss) / len(valid_loss)
         valid_acc = sum(valid_accs) / len(valid_accs)
         print(f"[ Valid | {epoch + 1:03d}/{n_epochs:03d} ] loss = {valid_loss:.5f}, acc = {valid_acc:.5f}")
+        scheduler.step()
 
-        scheduler.step(valid_loss)
         if valid_acc > best_acc:
             best_acc = valid_acc
-            torch.save(model.state_dict(), args.save_model_path)
+            model.save(args.save_model_path)
             print('Saving model with valid acc {:.5f}'.format(best_acc))
-            early_stop_count = 0
-        else: 
-            early_stop_count += 1
 
         print()
 
         writer.add_scalars('Accuracy', {'train_acc': train_acc, 'val_acc': valid_acc}, epoch)
         writer.add_scalars('Loss', {'train_loss': train_loss, 'val_loss': valid_loss}, epoch)
-
-        if early_stop_count >= args.early_stop:
-            print('\nModel is not improving, so we halt the training session.')
-            print(f'Best Accuracy: {best_acc}')
-            break
     
     end_time = time.time()
     writer.close()
