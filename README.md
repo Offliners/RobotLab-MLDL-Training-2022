@@ -34,14 +34,14 @@ $ conda env remove -n training
 ## Tutorial 1 - Covid19 Cases Prediction
 ![demo](./tutorial-1/img/tutorial-1-correlation-analysis.png)
 
-Dataset Resource : [Delphi group @ CMU](https://delphi.cmu.edu/covid19/ctis/)
+Dataset Resource : [Covid19 Cases](https://www.kaggle.com/competitions/ml2022spring-hw1/data)
 
 Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/colab/tutorial-1.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-1/colab/tutorial-1.ipynb)]
 
 ## Tutorial 2 - Food Classification
 
 
-Dataset Resource : [Food11](https://www.kaggle.com/datasets/vermaavi/food11)
+Dataset Resource : [Food11](https://www.kaggle.com/competitions/ml2021spring-hw3/data)
 
 Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
@@ -65,7 +65,5 @@ Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
 * [Pytorch lightning official tutorials](https://www.pytorchlightning.ai/tutorials)
-* [MIT Deep Learning and Artificial Intelligence Lectures](https://deeplearning.mit.edu/)
-* [UC Berkeley Deep Reinforcement Learning (CS285)](https://rail.eecs.berkeley.edu/deeprlcourse/)
+* [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
 * [NTU Machine Learning 2022 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
-* [NTU Applied Deep Learning 2022 Spring (CSIE5431, by Prof. Yun-Nung Chen)](https://www.csie.ntu.edu.tw/~miulab/s110-adl/)

@@ -39,7 +39,7 @@ def get_pseudo_labels(dataset, model, batch_size, device, threshold=0.9):
         i += 1
 
     model.train()
-    print ("Pseudo Labeling: {:5d}\n".format(len(idx)))
+    print(f'Pseudo Labeling: {len(idx)}')
     dataset = PseudoDataset(Subset(dataset, idx), labels)
 
     return dataset
@@ -154,3 +154,5 @@ def predict(args, test_loader, model, device):
 
         for i, pred in  enumerate(predictions):
             f.write(f"{i},{pred}\n")
+    
+    print('Done!')
