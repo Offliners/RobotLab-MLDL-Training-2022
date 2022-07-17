@@ -62,7 +62,7 @@ python/
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2021spring-hw3/)看表現如何
 
-※ 由於Colab有訓練時間的限制，因此Colab上的訓練沒有用Teacher-Student的架構訓練，只是單純訓練resnet18，所以分數較低
+※ 由於Colab有訓練時間的限制，因此在Colab上的訓練沒有用Teacher-Student的架構訓練，而是直接訓練resnet18，所以分數較低
 
 Kaggle分數
 ||Colab (resnet18)|Teacher (resnet18)|Student A (resnet50)|Student B (resnet34)|Student C (resnet101)|Students (Ensemble student A~C)|
