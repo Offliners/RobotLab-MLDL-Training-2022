@@ -26,7 +26,7 @@ def parse():
     parser.add_argument('--save_student_model_dir', type=str, default='./checkpoints/model', help='Path of saved student model directory')
     parser.add_argument('--save_csv_dir', type=str, default='./output', help='Path of prediction csv directory')
     parser.add_argument('--tensorboard', type=str, default='./checkpoints/tensorboard', help='Path of tensorboard')
-    parser.add_argument('--outvideo', type=str, default='./output', help='Path of vidoe of test images')
+    parser.add_argument('--video_dir', type=str, default='./video', help='Path of test images vidoe directory')
     parser.add_argument('--test_video_name', type=str, default='test_image.mp4', help='Name of output test video')
     parser.add_argument('--pred_video_name', type=str, default='test_image_pred.mp4', help='Name of output predict video')
 

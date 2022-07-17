@@ -46,7 +46,7 @@ Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/cola
 ## Tutorial 2 - Food Classification
 透過Teacher-Student的架構，訓練出3個學生模型，並使用Ensemble與Test Time Augmentation的技術來完成Food Classification
 
-![demo](./tutorial-2/img/test_image_pred.gif)
+![demo](./tutorial-2/img/tutorial-2-test_image_pred.gif)
 
 Dataset Resource : [Food11](https://www.kaggle.com/competitions/ml2021spring-hw3/data)
 

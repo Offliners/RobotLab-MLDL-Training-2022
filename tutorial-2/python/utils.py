@@ -226,7 +226,7 @@ def generate_video(image_path, output_video, video_name):
     height, width, layers = frame.shape
 
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
-    video = cv2.VideoWriter(os.path.join(output_video, video_name), fourcc, 1, (width, height))
+    video = cv2.VideoWriter(os.path.join(output_video, video_name), fourcc, 3, (width, height))
 
     for image in images:
         video.write(cv2.imread(os.path.join(image_path, image)))
@@ -296,7 +296,7 @@ def generate_predict_video(test_video_path, pred_video_path, model, device):
         if vw is None:
             fourcc = cv2.VideoWriter_fourcc(*'mp4v')
             vid_width_height = img.shape[1], img.shape[0]
-            vw = cv2.VideoWriter(pred_video_path, fourcc, 1, vid_width_height)
+            vw = cv2.VideoWriter(pred_video_path, fourcc, 3, vid_width_height)
         
         vw.write(img)
         vw.write(img)

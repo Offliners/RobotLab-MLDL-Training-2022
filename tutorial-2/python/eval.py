@@ -11,17 +11,18 @@ if torch.cuda.is_available():
 
 if __name__ == "__main__":
     args = parse()
+    os.makedirs(args.video_dir, exist_ok=True)
 
     print('Generating test video...')
-    generate_video(args.test_dir, args.outvideo, args.test_video_name)
+    generate_video(args.test_dir, args.video_dir, args.test_video_name)
     print('Done')
 
     model = select_model('resnet18', pretrained=False, num_classes=11)
     model.load_state_dict(torch.load(args.teacher_model_path))
     model = model.to(device)
 
-    test_video_path = os.path.join(args.outvideo, args.test_video_name)
-    pred_video_path = os.path.join(args.outvideo, args.pred_video_name)
+    test_video_path = os.path.join(args.video_dir, args.test_video_name)
+    pred_video_path = os.path.join(args.video_dir, args.pred_video_name)
 
     print('Generating predict video...')
     generate_predict_video(test_video_path, pred_video_path, model, device)
