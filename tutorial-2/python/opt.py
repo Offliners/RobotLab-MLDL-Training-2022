@@ -3,7 +3,7 @@ import argparse
 def parse():
     parser = argparse.ArgumentParser(description="Robotlab MLDL Training Tutorial 2 - Food Classification")
     parser.add_argument('--seed', type=int, default=3366, help='Set random seed')
-    parser.add_argument('--epoch', type=int, default=100, help='Set training epochs')
+    parser.add_argument('--epoch', type=int, default=120, help='Set training epochs')
     parser.add_argument('--pseudo_label_threshold', type=float, default=0.95, help='Set threshold of pseudo labels')
     parser.add_argument('--num_worker', type=int, default=8, help='Set number of worker')
     parser.add_argument('--train_batchsize', type=int, default=64, help='Set training batchsize')

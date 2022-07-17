@@ -72,12 +72,18 @@ def run(args):
         print(summary(student_model, (3, 224, 224)))
 
         trainer(args, train_loader, valid_loader, teacher_model, student_model, device, student_index[i])
-        save_paths.append(os.path.join(args.save_student_model_dir, f'model_{student_index[i]}.pth'))
-
+        save_model_path = os.path.join(args.save_student_model_dir, f'model_{student_index[i]}.pth')
+        save_csv_path = os.path.join(args.save_csv_dir, f'student_{student_index[i]}_pred.csv')
+        if args.use_tta:
+            tta_predict(test_loader, student_model, device, args.alpha, save_csv_path)
+        else:
+            predict(test_loader, student_model, device, save_csv_path)
+        
+        save_paths.append(save_model_path)
         del student_model
 
     ensemble_model = modelEnsemble(student_model_names, save_paths).to(device)
-    student_csv_path = os.path.join(args.save_csv_dir, 'student_pred.csv')
+    student_csv_path = os.path.join(args.save_csv_dir, 'student_ensemble_pred.csv')
     if args.use_tta:
         tta_predict(test_loader, ensemble_model, device, args.alpha, student_csv_path)
     else:

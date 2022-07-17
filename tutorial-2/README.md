@@ -23,7 +23,9 @@ $ tensorboard --logdir=./checkpoints/tensorboard/
 python/
     checkpoints/
         model/
-            model.pth
+            model_A.pth
+            model_B.pth
+            model_C.pth
         tensorboard/
             Accuracy_train_acc/
             Accuracy_val_acc/
@@ -33,6 +35,7 @@ python/
         testing/
         training/
         validation/
+        teacher_model.pth
 ```
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2021spring-hw3/)看表現如何

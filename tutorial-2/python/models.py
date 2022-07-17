@@ -17,14 +17,10 @@ class modelEnsemble(nn.Module):
         self.modelB.load_state_dict(torch.load(save_paths[1]))
         self.modelC = select_model(save_names[2])
         self.modelC.load_state_dict(torch.load(save_paths[2]))
-
-        self.classifier = nn.Linear(dim * 3, dim)
         
     def forward(self, x):
         x1 = self.modelA(x)
         x2 = self.modelB(x)
         x3 = self.modelC(x)
-        x = torch.cat((x1, x2, x3), dim=1)
-        out = self.classifier(x)
         
-        return out
+        return (x1 + x2 + x3)
