@@ -1,11 +1,13 @@
 import numpy as np
 import time
 import os
+import cv2
 import torch
 from tqdm import tqdm
 from dataset import PseudoDataset
 import torch.nn as nn
 import torch.nn.functional as F
+import torchvision.transforms as transforms
 from torch.utils.data import DataLoader, Subset
 from torch.utils.tensorboard import SummaryWriter
 
@@ -215,3 +217,90 @@ def format_time(seconds):
     if f == '':
         f = '0ms'
     return f
+
+
+def generate_video(image_path, output_video, video_name):
+    images = [img for img in os.listdir(image_path) if img.endswith(".jpg")]
+    images.sort()
+    frame = cv2.imread(os.path.join(image_path, images[0]))
+    height, width, layers = frame.shape
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    video = cv2.VideoWriter(os.path.join(output_video, video_name), fourcc, 1, (width, height))
+
+    for image in images:
+        video.write(cv2.imread(os.path.join(image_path, image)))
+
+    video.release()
+
+
+def generate_predict_video(test_video_path, pred_video_path, model, device):
+    cap = cv2.VideoCapture(test_video_path) 
+    vw = None
+    frame = -1
+
+    food11_label = ['Bread', 'Dairy product', 'Dessert', 'Egg', 'Fried food', 'Meat', 'Noodles or Pasta', 'Rice', 'Seafood', 'Soup', 'Vegetable or Fruit']
+
+    model.eval()
+    while True:
+        frame += 1
+        ret, img = cap.read()
+        if not ret: break
+
+        if img.shape[0] != 720:
+            img = cv2.resize(img, (720, 720))
+
+        img_proc = img.copy()
+        img_proc = cv2.resize(img_proc, (224, 224))
+        
+        test_img = transforms.ToTensor()(img_proc).to(device)
+        test_img = torch.unsqueeze(test_img, 0)
+
+        preds = model(test_img)
+        
+        guess = preds.argmax(dim=-1).cpu().numpy()[0]
+        perc = preds.detach().cpu().numpy()[0]
+        perc = np.exp(perc) / sum(np.exp(perc))
+        perc = [round(e * 100) for e in perc]
+
+        pad_color = 0
+        img = np.pad(img, ((0,0), (0,1280-720), (0,0)), mode='constant', constant_values=(pad_color))  
+        
+        line_type = cv2.LINE_AA
+        font_face = cv2.FONT_HERSHEY_SIMPLEX
+        font_scale = 1        
+        thickness = 2
+        x, y = 740, 60
+        color = (255, 255, 255)
+        
+        text = 'Neural Network Output:'
+        cv2.putText(img, text=text, org=(x, y), fontScale=font_scale, fontFace=font_face, thickness=thickness,
+                        color=color, lineType=line_type)
+        
+        text = 'Input:'
+        cv2.putText(img, text=text, org=(30, y), fontScale=font_scale, fontFace=font_face, thickness=thickness,
+                        color=color, lineType=line_type)   
+
+        y = 100
+        for i, p in enumerate(perc):
+            if i == guess:
+                color = (255, 218, 158)
+            else:
+                color = (100, 100, 100)
+
+            text = '{:>18} {:>3}%'.format(food11_label[i], p)
+            cv2.putText(img, text=text, org=(x, y), fontScale=font_scale, fontFace=font_face, thickness=thickness,
+                        color=color, lineType=line_type)
+            y += 60
+
+        if vw is None:
+            fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+            vid_width_height = img.shape[1], img.shape[0]
+            vw = cv2.VideoWriter(pred_video_path, fourcc, 1, vid_width_height)
+        
+        vw.write(img)
+        vw.write(img)
+            
+    cap.release()
+    if vw is not None:
+        vw.release()
