@@ -50,11 +50,11 @@ python/
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2022spring-hw1)看表現如何
 
-我的分數如下:
-
-Public score : `0.85368` (Rank : `92/944`)
-
-Private score : `0.89451` (Rank : `89/944`)
+Kaggle分數
+||My model|
+|-|-|
+|Public score|0.85368|
+|Private score|0.89451|
 
 ## Help
 ```shell
