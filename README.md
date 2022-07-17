@@ -24,7 +24,10 @@ $ cd RobotLab-MLDL-Training-2022
 # 安裝此專案所需的所有函式庫
 $ pip install -r requirements.txt
 
-# 關閉虛擬環境
+# 前往想要訓練的教程
+$ cd tutorial-x
+
+# 完成訓練後即可關閉虛擬環境
 $ conda deactivate
 
 # 若之後確定不會使用的話，可以移除虛擬環境
@@ -68,6 +71,5 @@ Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
-* [Pytorch lightning official tutorials](https://www.pytorchlightning.ai/tutorials)
 * [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
 * [NTU Machine Learning 2022 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
