@@ -2,14 +2,14 @@ import torch
 import torch.nn as nn
 
 # Model list is available : https://pytorch.org/vision/0.11/models.html
-def select_model(model_name, pretrained=False):
-    model = torch.hub.load('pytorch/vision:v0.11.0', model_name, pretrained=pretrained, num_classes=11)
+def select_model(model_name, pretrained=False, num_classes=11):
+    model = torch.hub.load('pytorch/vision:v0.11.0', model_name, pretrained=pretrained, num_classes=num_classes)
 
     return model
 
 
 class modelEnsemble(nn.Module):   
-    def __init__(self, save_names, save_paths, dim=11):
+    def __init__(self, save_names, save_paths):
         super(modelEnsemble, self).__init__()
         self.modelA = select_model(save_names[0])
         self.modelA.load_state_dict(torch.load(save_paths[0]))
