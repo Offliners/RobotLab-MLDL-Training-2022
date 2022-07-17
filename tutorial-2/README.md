@@ -44,6 +44,12 @@ python/
         training/
         validation/
         teacher_model.pth
+    output/
+        student_A_pred.csv
+        student_B_pred.csv
+        student_C_pred.csv
+        student_ensemble_pred.csv
+        teacher_pred.csv
 ```
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2021spring-hw3/)看表現如何
