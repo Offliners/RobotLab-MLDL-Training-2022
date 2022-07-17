@@ -57,8 +57,8 @@ python/
 Kaggle分數
 ||Teacher (resnet18)|Student A (resnet50)|Student B (resnet34)|Student C (resnet101)|Students (Ensemble student A~C)|
 |-|-|-|-|-|-|
-|Public score|0.90023|0.83930|0.81660|0.82616||
-|Private score|0.89121|0.82127|0.81589|0.82785||
+|Public score|0.90023|0.83930|0.81660|0.82616|0.87514|
+|Private score|0.89121|0.82127|0.81589|0.82785|0.87507|
 
 
 ## Help
