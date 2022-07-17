@@ -1,5 +1,7 @@
 # Tutorial 2 - Food Classification
 
+![demo](./img/test_image_pred.gif)
+
 ## Usage
 在本機端開始訓練
 ```shell 
