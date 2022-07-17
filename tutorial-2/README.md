@@ -10,6 +10,9 @@ $ python download_dataset.py
 
 # 開始訓練
 $ python main.py
+
+# 產生模型在測試圖片的機率影片
+$ python eval.py
 ```
 
 使用Tensorboard來觀看訓練與驗證的Accuracy與Loss
@@ -50,6 +53,8 @@ python/
         student_C_pred.csv
         student_ensemble_pred.csv
         teacher_pred.csv
+        test_image.mp4
+        test_image_pred.mp4
 ```
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2021spring-hw3/)看表現如何
@@ -67,7 +72,8 @@ $ python main.py --help
 usage: main.py [-h] [--seed SEED] [--epoch EPOCH] [--pseudo_label_threshold PSEUDO_LABEL_THRESHOLD] [--num_worker NUM_WORKER] [--train_batchsize TRAIN_BATCHSIZE] [--val_batchsize VAL_BATCHSIZE]
                [--test_batchsize TEST_BATCHSIZE] [--optimizer OPTIMIZER] [--lr LR] [--weight_decay WEIGHT_DECAY] [--period PERIOD] [--use_tta USE_TTA] [--alpha ALPHA] [--train_dir TRAIN_DIR]
                [--unlabeled_dir UNLABELED_DIR] [--valid_dir VALID_DIR] [--test_dir TEST_DIR] [--teacher_model_path TEACHER_MODEL_PATH] [--student_A_name STUDENT_A_NAME] [--student_B_name STUDENT_B_NAME]
-               [--student_C_name STUDENT_C_NAME] [--save_student_model_dir SAVE_STUDENT_MODEL_DIR] [--save_csv_dir SAVE_CSV_DIR] [--tensorboard TENSORBOARD]
+               [--student_C_name STUDENT_C_NAME] [--save_student_model_dir SAVE_STUDENT_MODEL_DIR] [--save_csv_dir SAVE_CSV_DIR] [--tensorboard TENSORBOARD] [--outvideo OUTVIDEO]
+               [--test_video_name TEST_VIDEO_NAME] [--pred_video_name PRED_VIDEO_NAME]
 
 Robotlab MLDL Training Tutorial 2 - Food Classification
 
@@ -114,4 +120,9 @@ optional arguments:
                         Path of prediction csv directory
   --tensorboard TENSORBOARD
                         Path of tensorboard
+  --outvideo OUTVIDEO   Path of vidoe of test images
+  --test_video_name TEST_VIDEO_NAME
+                        Name of output test video
+  --pred_video_name PRED_VIDEO_NAME
+                        Name of output predict video
 ```
