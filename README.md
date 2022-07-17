@@ -65,9 +65,9 @@ Dataset Resource : [Crypko](https://crypko.ai/#)
 
 Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
-## Tutorial 5 - Lunar Lander
+## Tutorial 5 - Super Mario
 
-Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Test Content (2022/07/23 released)
 
