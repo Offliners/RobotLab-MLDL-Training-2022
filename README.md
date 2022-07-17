@@ -32,6 +32,8 @@ $ conda env remove -n training
 ```
 
 ## Tutorial 1 - Covid19 Cases Prediction
+透過相關係數的分析，選出重要的特徵來訓練模型做Covid19 Cases Prediction
+
 ![demo](./tutorial-1/img/tutorial-1-correlation-analysis.png)
 
 Dataset Resource : [Covid19 Cases](https://www.kaggle.com/competitions/ml2022spring-hw1/data)
@@ -39,7 +41,7 @@ Dataset Resource : [Covid19 Cases](https://www.kaggle.com/competitions/ml2022spr
 Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/colab/tutorial-1.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-1/colab/tutorial-1.ipynb)]
 
 ## Tutorial 2 - Food Classification
-
+透過Teacher-Student的架構，訓練出3個學生模型，並使用Ensemble與Test Time Augmentation的技術來完成Food Classification
 
 Dataset Resource : [Food11](https://www.kaggle.com/competitions/ml2021spring-hw3/data)
 
@@ -50,6 +52,8 @@ Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook]()] [[Google Colab
 Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 4 - Anime Face Generation
+使用SNGAN來完成Anime Face Generation
+
 ![demo](./tutorial-4/img/tutorial-4-demo.gif)
 
 Dataset Resource : [Crypko](https://crypko.ai/#)
