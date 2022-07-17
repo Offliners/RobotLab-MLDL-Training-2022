@@ -48,11 +48,11 @@ python/
 
 產生的`pred.csv`可上傳至[Kaggle](https://www.kaggle.com/competitions/ml2021spring-hw3/)看表現如何
 
-我的分數如下:
-
-Public score : `0.0` (Rank : `/1404`)
-
-Private score : `0.0` (Rank : `/1404`)
+Kaggle分數
+||Teacher (resnet18)|Student A (resnet50)|Student B (resnet50)|Student C (resnet50)|Students (Ensemble)|
+|-|-|-|-|-|-|
+|Public score|0.90023|||||
+|Private score|0.89121|||||
 
 
 ## Help
