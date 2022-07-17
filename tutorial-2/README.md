@@ -16,7 +16,7 @@ $ python main.py
 ```shell
 $ tensorboard --logdir=./checkpoints/tensorboard/
 ```
-![tensorboard]()
+![tensorboard](./img/tutorial-2-tensorboard.png)
 
 產生的資料夾內容
 ```shell
@@ -27,10 +27,18 @@ python/
             model_B.pth
             model_C.pth
         tensorboard/
-            Accuracy_train_acc/
-            Accuracy_val_acc/
-            Loss_train_loss/
-            Loss_val_loss/
+            Accuracy_A_train_acc/
+            Accuracy_A_val_acc/
+            Loss_A_train_loss/
+            Loss_A_val_loss/
+            Accuracy_B_train_acc/
+            Accuracy_B_val_acc/
+            Loss_B_train_loss/
+            Loss_B_val_loss/
+            Accuracy_C_train_acc/
+            Accuracy_C_val_acc/
+            Loss_C_train_loss/
+            Loss_C_val_loss/
     data/
         testing/
         training/
@@ -50,10 +58,10 @@ Private score : `0.0` (Rank : `/1404`)
 ## Help
 ```shell
 $ python main.py --help
-usage: main.py [-h] [--seed SEED] [--epoch EPOCH] [--model_name MODEL_NAME] [--pretrained PRETRAINED] [--do_semi DO_SEMI] [--pseudo_label_threshold PSEUDO_LABEL_THRESHOLD]
-               [--start_pseudo_threshold START_PSEUDO_THRESHOLD] [--num_worker NUM_WORKER] [--train_batchsize TRAIN_BATCHSIZE] [--val_batchsize VAL_BATCHSIZE] [--test_batchsize TEST_BATCHSIZE]
-               [--optimizer OPTIMIZER] [--lr LR] [--weight_decay WEIGHT_DECAY] [--train_dir TRAIN_DIR] [--unlabeled_dir UNLABELED_DIR] [--valid_dir VALID_DIR] [--test_dir TEST_DIR]
-               [--save_model_path SAVE_MODEL_PATH] [--save_csv_path SAVE_CSV_PATH] [--tensorboard TENSORBOARD]
+usage: main.py [-h] [--seed SEED] [--epoch EPOCH] [--pseudo_label_threshold PSEUDO_LABEL_THRESHOLD] [--num_worker NUM_WORKER] [--train_batchsize TRAIN_BATCHSIZE] [--val_batchsize VAL_BATCHSIZE]
+               [--test_batchsize TEST_BATCHSIZE] [--optimizer OPTIMIZER] [--lr LR] [--weight_decay WEIGHT_DECAY] [--period PERIOD] [--use_tta USE_TTA] [--alpha ALPHA] [--train_dir TRAIN_DIR]
+               [--unlabeled_dir UNLABELED_DIR] [--valid_dir VALID_DIR] [--test_dir TEST_DIR] [--teacher_model_path TEACHER_MODEL_PATH] [--student_A_name STUDENT_A_NAME] [--student_B_name STUDENT_B_NAME]
+               [--student_C_name STUDENT_C_NAME] [--save_student_model_dir SAVE_STUDENT_MODEL_DIR] [--save_csv_dir SAVE_CSV_DIR] [--tensorboard TENSORBOARD]
 
 Robotlab MLDL Training Tutorial 2 - Food Classification
 
@@ -61,15 +69,8 @@ optional arguments:
   -h, --help            show this help message and exit
   --seed SEED           Set random seed
   --epoch EPOCH         Set training epochs
-  --model_name MODEL_NAME
-                        Set name of model
-  --pretrained PRETRAINED
-                        Whether to use pretrained model
-  --do_semi DO_SEMI     Whether to do semi-supervised learning
   --pseudo_label_threshold PSEUDO_LABEL_THRESHOLD
                         Set threshold of pseudo labels
-  --start_pseudo_threshold START_PSEUDO_THRESHOLD
-                        Set accuracy threshold of using pseudo labels
   --num_worker NUM_WORKER
                         Set number of worker
   --train_batchsize TRAIN_BATCHSIZE
@@ -83,6 +84,9 @@ optional arguments:
   --lr LR               Set learning rate
   --weight_decay WEIGHT_DECAY
                         Set weight decay
+  --period PERIOD       Set maximum number of iterations
+  --use_tta USE_TTA     Whether to do test time augmentation
+  --alpha ALPHA         Set weight between test_tfm and train_tfm
   --train_dir TRAIN_DIR
                         Path of labeled training data directory
   --unlabeled_dir UNLABELED_DIR
@@ -90,10 +94,18 @@ optional arguments:
   --valid_dir VALID_DIR
                         Path of validation data directory
   --test_dir TEST_DIR   Path of test data directory
-  --save_model_path SAVE_MODEL_PATH
-                        Path of best model
-  --save_csv_path SAVE_CSV_PATH
-                        Path of prediction csv
+  --teacher_model_path TEACHER_MODEL_PATH
+                        Path of teacher model
+  --student_A_name STUDENT_A_NAME
+                        Name of student A model
+  --student_B_name STUDENT_B_NAME
+                        Name of student B model
+  --student_C_name STUDENT_C_NAME
+                        Name of student C model
+  --save_student_model_dir SAVE_STUDENT_MODEL_DIR
+                        Path of saved student model directory
+  --save_csv_dir SAVE_CSV_DIR
+                        Path of prediction csv directory
   --tensorboard TENSORBOARD
                         Path of tensorboard
 ```
