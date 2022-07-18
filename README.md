@@ -37,10 +37,7 @@ $ conda env remove -n training
 ## Tutorial 1 - Covid19 Cases Prediction
 透過相關係數的分析，選出重要的特徵來訓練模型做Covid19 Cases Prediction
 
-<details>
-    <summary> DEMO </summary>
-    ![demo](./tutorial-1/img/tutorial-1-correlation-analysis.png)
-</details>
+![demo](./tutorial-1/img/tutorial-1-correlation-analysis.png)
 
 Dataset Resource : [Covid19 Cases](https://www.kaggle.com/competitions/ml2022spring-hw1/data)
 
@@ -49,10 +46,7 @@ Links : [[README](./tutorial-1/README.md)] [[Jupyter Notebook](./tutorial-1/cola
 ## Tutorial 2 - Food Classification
 透過Teacher-Student的架構，訓練出3個學生模型，並使用Ensemble與Test Time Augmentation的技術來完成Food Classification
 
-<details>
-    <summary> DEMO </summary>
-    ![demo](./tutorial-2/img/tutorial-2-test_image_pred.gif)
-</details>
+![demo](./tutorial-2/img/tutorial-2-test_image_pred.gif)
 
 Dataset Resource : [Food11](https://www.kaggle.com/competitions/ml2021spring-hw3/data)
 
@@ -61,20 +55,14 @@ Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook](./tutorial-2/cola
 ## Tutorial 3 - Synthetic Image Segmentation
 使用resnet18當backbone，並用UNet來完成Synthetic Image Segmentation
 
-<details>
-    <summary> DEMO </summary>
-    ![demo](./tutorial-3/img/tutorial-3-demo.gif)
-</details>
+![demo](./tutorial-3/img/tutorial-3-demo.gif)
 
 Links : [[README](./tutorial-3/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 4 - Anime Face Generation
 使用SNGAN來完成Anime Face Generation
 
-<details>
-    <summary> DEMO </summary>
-    ![demo](./tutorial-4/img/tutorial-4-demo.gif)
-</details>
+![demo](./tutorial-4/img/tutorial-4-demo.gif)
 
 Dataset Resource : [Crypko](https://crypko.ai/#)
 
@@ -83,8 +71,6 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab
 ## Tutorial 5 - Super Mario
 使用A3C來訓練模型完成Super Mario任務
 
-<details>
-    <summary> DEMO </summary>
 |World/Stage|1|2|3|4|
 |-|-|-|-|-|
 |1|![World 1-1](./tutorial-5/img/mario_world_1_1.gif)|Unsolved<!--![World 1-2]()-->|Unsolved<!--![World 1-3]()-->|![World 1-4](./tutorial-5/img/mario_world_1_4.gif)|
@@ -95,7 +81,6 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab
 |6|Unsolved<!--![World 6-1]()-->|Unsolved<!--![World 6-2]()-->|Unsolved<!--![World 6-3]()-->|Unsolved<!--![World 6-4]()-->|
 |7|Unsolved<!--![World 7-1]()-->|Unsolved<!--![World 7-2]()-->|![World 7-3](./tutorial-5/img/mario_world_7_3.gif)|Unsolved<!--![World 7-4]()-->|
 |8|Unsolved<!--![World 8-1]())-->|![World 8-2](./tutorial-5/img/mario_world_8_2.gif)|![World 8-3](./tutorial-5/img/mario_world_8_3.gif)|Unsolved<!--![World 8-4]()-->|
-</details>
 
 Environment : [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros)
 
