@@ -13,7 +13,7 @@ def parse():
     parser.add_argument('--tau', type=float, default=1.0, help='Set parameter for GAE')
     parser.add_argument('--beta', type=float, default=0.01, help='Set entropy coefficient')
     parser.add_argument("--num_local_steps", type=int, default=50)
-    parser.add_argument("--num_global_steps", type=int, default=20000)
+    parser.add_argument("--num_global_steps", type=int, default=1e6)
     parser.add_argument("--num_processes", type=int, default=6, help='Set the number of processes')
     parser.add_argument("--save_interval", type=int, default=500, help='Set number of steps between savings')
     parser.add_argument("--max_actions", type=int, default=200, help='Set maximum repetition steps in test phase')

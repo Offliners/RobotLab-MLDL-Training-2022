@@ -27,7 +27,7 @@ def run(opt_args):
         
         process.start()
         processes.append(process)
-    
+
     process = mp.Process(target=tester, args=(opt_args.num_processes, opt_args, global_model))
     process.start()
     processes.append(process)
