@@ -79,6 +79,8 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab
 |7|Unsolved<!--![World 7-1]()-->|Unsolved<!--![World 7-2]()-->|![World 7-3](./tutorial-5/img/mario_world_7_3.gif)|Unsolved<!--![World 7-4]()-->|
 |8|Unsolved<!--![World 8-1]())-->|![World 8-2](./tutorial-5/img/mario_world_8_2.gif)|![World 8-3](./tutorial-5/img/mario_world_8_3.gif)|Unsolved<!--![World 8-4]()-->|
 
+Environment : [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros)
+
 Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Test Content (2022/07/23 released)
