@@ -86,8 +86,6 @@ Environment : [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario
 
 Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
-## Test Content (2022/07/23 released)
-
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
 * [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
