@@ -33,6 +33,8 @@ $ python eval.py --world {index of world (1~8)} --stage {index of stage (1~4)}
 $ tensorboard --logdir=./checkpoints/tensorboard/
 ```
 
+![tensorboard](./img/tutorial-5-tensorboard.png)
+
 ## Help
 ```shell
 $ python main.py --help

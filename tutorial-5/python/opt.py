@@ -20,6 +20,6 @@ def parse():
     parser.add_argument('--save_model_dir', type=str, default='./checkpoints/model', help='Path of saved model directory')
     parser.add_argument('--tensorboard', type=str, default='./checkpoints/tensorboard', help='Path of tensorboard')
     parser.add_argument('--output_video', type=str, default='./video', help='Path of output vidoe directory')
-    parser.add_argument('--use_pretrained', type=bool, default=True, help='Whether to use pretrained model weight')
+    parser.add_argument('--use_pretrained', type=bool, default=False, help='Whether to use pretrained model weight')
 
     return parser.parse_args()

@@ -22,10 +22,10 @@ def eval(opt_args):
             exit(1)
 
     if torch.cuda.is_available():
-        model.load_state_dict(torch.load("{}/a3c_mario_{}_{}".format(opt_args.save_model_dir, opt_args.world, opt_args.stage)))
+        model.load_state_dict(torch.load("{}/a3c_mario_{}_{}.pth".format(opt_args.save_model_dir, opt_args.world, opt_args.stage)))
         model = model.to(device)
     else:
-        model.load_state_dict(torch.load("{}/a3c_mario_{}_{}".format(opt_args.save_model_dir, opt_args.world, opt_args.stage),
+        model.load_state_dict(torch.load("{}/a3c_mario_{}_{}.pth".format(opt_args.save_model_dir, opt_args.world, opt_args.stage),
                                          map_location=lambda storage, loc: storage))
     
     model.eval()

@@ -54,7 +54,7 @@ def trainer(index, opt_args, global_model, optimizer, device, save=False):
         if save:
             if curr_episode % opt_args.save_interval == 0 and curr_episode > 0:
                 torch.save(global_model.state_dict(),
-                           "{}/a3c_mario_{}_{}".format(opt_args.save_model_dir, opt_args.world, opt_args.stage))
+                           "{}/a3c_mario_{}_{}.pth".format(opt_args.save_model_dir, opt_args.world, opt_args.stage))
 
             print("Process {}. Episode {}".format(index, curr_episode))
         
