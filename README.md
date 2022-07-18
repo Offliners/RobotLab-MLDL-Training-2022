@@ -66,6 +66,19 @@ Dataset Resource : [Crypko](https://crypko.ai/#)
 Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 5 - Super Mario
+使用A3C來訓練模型完成Super Mario任務
+
+|World/Stage|1|2|3|4|
+|-|-|-|-|-|
+|1|![World 1-1](./tutorial-5/img/mario_world_1_1.gif)|![]()|![]()|![World 1-4](./tutorial-5/img/mario_world_1_4.gif)|
+|2|![]()|![]()|![]()|![]()|
+|3|![]()|![]()|![]()|![]()|
+|4|![]()|![]()|![]()|![]()|
+|5|![]()|![]()|![]()|![]()|
+|6|![]()|![]()|![]()|![]()|
+|7|![]()|![]()|![]()|![]()|
+|8|![]()|![]()|![]()|![]()|
+
 
 Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
 

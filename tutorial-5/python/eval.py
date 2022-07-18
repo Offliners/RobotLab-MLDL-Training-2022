@@ -9,10 +9,10 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 if torch.cuda.is_available():
     torch.cuda.empty_cache()
 
-def test(opt_args):
+def eval(opt_args):
     torch.manual_seed(opt_args.seed)
     env, num_states, num_actions = create_train_env(opt_args.world, opt_args.stage, opt_args.action_type,
-                                                    "{}/video_{}_{}.mp4".format(opt_args.output_video, opt_args.world, opt_args.stage))
+                                                    "{}/mario_world_{}_{}.mp4".format(opt_args.output_video, opt_args.world, opt_args.stage))
     model = ActorCritic(num_states, num_actions)
 
     if opt_args.use_pretrained:
@@ -61,4 +61,6 @@ def test(opt_args):
 
 if __name__ == "__main__":
     opt_args = parse()
-    test(opt_args)
+    os.makedirs(opt_args.output_video, exist_ok=True)
+
+    eval(opt_args)

@@ -3,5 +3,6 @@ __pycache__/
 checkpoints/
 output/
 video/
+pretrained_model/
 data/
 tensorboard/
