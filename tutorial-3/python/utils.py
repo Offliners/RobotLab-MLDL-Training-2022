@@ -1,5 +1,7 @@
 import itertools
 from collections import defaultdict
+import os
+import cv2
 import time
 import numpy as np
 import matplotlib.pyplot as plt
@@ -19,34 +21,20 @@ def same_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 
-def plot_img_array(img_array, ncol=3):
+def plot_side_by_side(img_arrays, save_path):
+    flatten_list = reduce(lambda x,y: x+y, zip(*img_arrays))
+
+    ncol = len(img_arrays)
+    img_array = np.array(flatten_list)
     nrow = len(img_array) // ncol
 
     f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4))
-
+    plt.text(x=0.5, y=0.94, s="Input image - Ground-truth - Predicted mask", fontsize=18, ha="center", transform=f.transFigure)
     for i in range(len(img_array)):
         plots[i // ncol, i % ncol]
         plots[i // ncol, i % ncol].imshow(img_array[i])
-
-
-def plot_side_by_side(img_arrays):
-    flatten_list = reduce(lambda x,y: x+y, zip(*img_arrays))
-
-    plot_img_array(np.array(flatten_list), ncol=len(img_arrays))
-
-
-def plot_errors(results_dict, title):
-    markers = itertools.cycle(('+', 'x', 'o'))
-
-    plt.title('{}'.format(title))
-
-    for label, result in sorted(results_dict.items()):
-        plt.plot(result, marker=next(markers), label=label)
-        plt.ylabel('dice_coef')
-        plt.xlabel('epoch')
-        plt.legend(loc=3, bbox_to_anchor=(1, 0))
-
-    plt.show()
+    
+    f.savefig(save_path)
 
 
 def masks_to_colorimg(masks):
@@ -107,7 +95,7 @@ def trainer(args, train_loader, valid_loader, model, device):
     start_time = time.time()
     n_epochs = args.epoch
     for epoch in range(n_epochs):
-        print('Epoch {}/{}'.format(epoch, n_epochs - 1))
+        print('Epoch {}/{}'.format(epoch + 1, n_epochs))
         print('-' * 10)
 
         for phase in ['train', 'val']:
@@ -138,7 +126,7 @@ def trainer(args, train_loader, valid_loader, model, device):
             outputs = []
             for k in metrics.keys():
                 outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
-                writer.add_scalars(f'{k}', {f'{phase}_{k}' : metrics[k] / epoch_samples}, epoch)
+                writer.add_scalars(f'{phase}_loss', {f'{k}' : metrics[k] / epoch_samples}, epoch)
             
             epoch_loss = metrics['loss'] / epoch_samples
 
@@ -147,11 +135,56 @@ def trainer(args, train_loader, valid_loader, model, device):
 
             if phase == 'val' and epoch_loss < best_loss:
                 best_loss = epoch_loss
-                print('Saving model with valid acc {:.5f}'.format(best_loss))
+                print('Saving model with valid loss {:.5f}'.format(best_loss))
                 torch.save(model.state_dict(), args.save_model_path)
 
     end_time = time.time()
     print(f'Time usgae : {format_time(end_time - start_time)}')
+
+
+def reverse_transform(inp):
+    inp = inp.numpy().transpose((1, 2, 0))
+    mean = np.array([0.485, 0.456, 0.406])
+    std = np.array([0.229, 0.224, 0.225])
+    inp = std * inp + mean
+    inp = np.clip(inp, 0, 1)
+    inp = (inp * 255).astype(np.uint8)
+
+    return inp
+
+
+def generate_video(image_path, output_video, video_name):
+    images = [img for img in os.listdir(image_path) if img.endswith(".png")]
+    images.sort()
+    frame = cv2.imread(os.path.join(image_path, images[0]))
+    height, width, layers = frame.shape
+
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+    video = cv2.VideoWriter(os.path.join(output_video, video_name), fourcc, 2, (width, height))
+
+    for image in images:
+        video.write(cv2.imread(os.path.join(image_path, image)))
+
+    video.release()
+
+
+def tester(args, test_loader, model, device):
+    count = 0
+    for inputs, labels in tqdm(test_loader):
+        inputs = inputs.to(device)
+        labels = labels.to(device)
+
+        pred = model(inputs)
+        pred = torch.sigmoid(pred)
+        pred = pred.data.cpu().numpy()
+
+        input_images_rgb = [reverse_transform(x) for x in inputs.cpu()]
+
+        target_masks_rgb = [masks_to_colorimg(x) for x in labels.cpu().numpy()]
+        pred_rgb = [masks_to_colorimg(x) for x in pred]
+
+        plot_side_by_side([input_images_rgb, target_masks_rgb, pred_rgb], os.path.join(args.output, f'result_{count}.png'))
+        count += 1
 
 
 def format_time(seconds):

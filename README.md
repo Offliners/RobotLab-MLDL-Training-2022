@@ -54,6 +54,8 @@ Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook](./tutorial-2/cola
 
 ## Tutorial 3 - Synthetic Image Segmentation
 
+![demo](./tutorial-3/img/tutorial-3-demo.gif)
+
 Links : [[README]()] [[Jupyter Notebook]()] [[Google Colab]()]
 
 ## Tutorial 4 - Anime Face Generation
