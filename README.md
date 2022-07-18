@@ -74,7 +74,7 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab
 |2|![World 2-1]()|![World 2-2](./tutorial-5/img/mario_world_2_2.gif)|![World 2-3](./tutorial-5/img/mario_world_2_3.gif)|![World 2-4]()|
 |3|![World 3-1](./tutorial-5/img/mario_world_3_1.gif)|![World 3-2]()|![World 3-3]()|![World 3-4](./tutorial-5/img/mario_world_3_4.gif)|
 |4|![World 4-1](./tutorial-5/img/mario_world_4_1.gif)|![World 4-2]()|![World 4-3]()|![World 4-4]()|
-|5|![World 5-1]()|![World 5-2]()|![World 5-3]()|![World 5-4]()|
+|5|![World 5-1](./tutorial-5/img/mario_world_5_1.gif)|![World 5-2]()|![World 5-3]()|![World 5-4]()|
 |6|![World 6-1]()|![World 6-2]()|![World 6-3]()|![World 6-4]()|
 |7|![World 7-1]()|![World 7-2]()|![World 7-3](./tutorial-5/img/mario_world_7_3.gif)|![World 7-4]()|
 |8|![World 8-1]()|![World 8-2](./tutorial-5/img/mario_world_8_2.gif)|![World 8-3](./tutorial-5/img/mario_world_8_3.gif)|![World 8-4]()|
