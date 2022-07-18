@@ -71,7 +71,7 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab
 |World/Stage|1|2|3|4|
 |-|-|-|-|-|
 |1|![World 1-1](./tutorial-5/img/mario_world_1_1.gif)|![World 1-2]()|![World 1-3]()|![World 1-4](./tutorial-5/img/mario_world_1_4.gif)|
-|2|![World 2-1]()|![World 2-2]()|![World 2-3](./tutorial-5/img/mario_world_2_3.gif)|![World 2-4]()|
+|2|![World 2-1]()|![World 2-2](./tutorial-5/img/mario_world_2_2.gif)|![World 2-3](./tutorial-5/img/mario_world_2_3.gif)|![World 2-4]()|
 |3|![World 3-1](./tutorial-5/img/mario_world_3_1.gif)|![World 3-2]()|![World 3-3]()|![World 3-4](./tutorial-5/img/mario_world_3_4.gif)|
 |4|![World 4-1](./tutorial-5/img/mario_world_4_1.gif)|![World 4-2]()|![World 4-3]()|![]()|![World 4-4]()|![]()|
 |5|![World 5-1]()|![World 5-2]()|![World 5-3]()|![World 5-4]()|
