@@ -53,6 +53,7 @@ Dataset Resource : [Food11](https://www.kaggle.com/competitions/ml2021spring-hw3
 Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook](./tutorial-2/colab/tutorial-2.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-2/colab/tutorial-2.ipynb)]
 
 ## Tutorial 3 - Synthetic Image Segmentation
+使用resnet18當backbone，並用UNet來完成Synthetic Image Segmentation
 
 ![demo](./tutorial-3/img/tutorial-3-demo.gif)
 
