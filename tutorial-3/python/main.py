@@ -9,7 +9,6 @@ from torch.utils.data import DataLoader
 import torchvision.transforms as transforms
 from torchsummary import summary
 
-
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 if torch.cuda.is_available():
     torch.cuda.empty_cache()
@@ -46,6 +45,7 @@ if __name__ == "__main__":
 
     os.makedirs('./checkpoints', exist_ok=True)
     os.makedirs('./checkpoints/model', exist_ok=True)
+    os.makedirs(args.video_dir, exist_ok=True)
     os.makedirs(args.tensorboard, exist_ok=True)
 
     run(args)

@@ -7,6 +7,7 @@ from functools import reduce
 import torch
 import torch.nn.functional as F
 from tqdm import tqdm
+from torch.utils.tensorboard import SummaryWriter
 
 def same_seed(seed): 
     torch.backends.cudnn.deterministic = True
@@ -90,14 +91,6 @@ def dice_loss(pred, target, smooth = 1.):
     return loss.mean()
 
 
-def print_metrics(metrics, epoch_samples, phase):
-    outputs = []
-    for k in metrics.keys():
-        outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
-
-    print("{}: {}".format(phase, ", ".join(outputs)))
-
-
 def trainer(args, train_loader, valid_loader, model, device):
     optimizer = getattr(torch.optim, args.optimizer)(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=8, gamma=0.1)
@@ -108,6 +101,8 @@ def trainer(args, train_loader, valid_loader, model, device):
     }
     
     best_loss = np.inf
+
+    writer = SummaryWriter(args.tensorboard)
 
     start_time = time.time()
     n_epochs = args.epoch
@@ -140,22 +135,22 @@ def trainer(args, train_loader, valid_loader, model, device):
 
                 epoch_samples += inputs.size(0)
 
-            print_metrics(metrics, epoch_samples, phase)
+            outputs = []
+            for k in metrics.keys():
+                outputs.append("{}: {:4f}".format(k, metrics[k] / epoch_samples))
+                writer.add_scalars(f'{k}', {f'{phase}_{k}' : metrics[k] / epoch_samples}, epoch)
+            
             epoch_loss = metrics['loss'] / epoch_samples
 
             if phase == 'train':
                 scheduler.step()
-                for param_group in optimizer.param_groups:
-                    print("LR", param_group['lr'])
 
             if phase == 'val' and epoch_loss < best_loss:
-                print(f"saving best model to {args.save_model_path}")
                 best_loss = epoch_loss
-
+                print('Saving model with valid acc {:.5f}'.format(best_loss))
                 torch.save(model.state_dict(), args.save_model_path)
 
     end_time = time.time()
-    print('Best val loss: {:4f}'.format(best_loss))
     print(f'Time usgae : {format_time(end_time - start_time)}')
 
 
