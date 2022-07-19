@@ -66,7 +66,7 @@ Links : [[README](./tutorial-3/README.md)] [[Jupyter Notebook](https://github.co
 
 Dataset Resource : [Crypko](https://crypko.ai/#)
 
-Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook](https://github.com/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-4/colab/tutorial-4.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-4/colab/tutorial-4.ipynb)]
 
 ## Tutorial 5 - Super Mario
 使用A3C來訓練模型完成Super Mario任務
