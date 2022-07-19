@@ -90,3 +90,6 @@ Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
 * [NTU Machine Learning 2021 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2021-spring.php)
 * [NTU Machine Learning 2022 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
+* [MIT Deep Learning and Artificial Intelligence Lectures](https://github.com/lexfridman/mit-deep-learning)
+* [UNet/FCN PyTorch](https://github.com/usuyama/pytorch-unet)
+* [Super-mario-bros-A3C-pytorch](https://github.com/uvipen/Super-mario-bros-A3C-pytorch)
