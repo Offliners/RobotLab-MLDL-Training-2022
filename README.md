@@ -57,7 +57,7 @@ Links : [[README](./tutorial-2/README.md)] [[Jupyter Notebook](./tutorial-2/cola
 
 ![demo](./tutorial-3/img/tutorial-3-demo.gif)
 
-Links : [[README](./tutorial-3/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-3/README.md)] [[Jupyter Notebook](https://github.com/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-3/colab/tutorial-3.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-3/colab/tutorial-3.ipynb)]
 
 ## Tutorial 4 - Anime Face Generation
 使用SNGAN來完成Anime Face Generation
