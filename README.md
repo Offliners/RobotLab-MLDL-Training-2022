@@ -93,3 +93,4 @@ Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab
 * [MIT Deep Learning and Artificial Intelligence Lectures](https://github.com/lexfridman/mit-deep-learning)
 * [UNet/FCN PyTorch](https://github.com/usuyama/pytorch-unet)
 * [Super-mario-bros-PPO-pytorch](https://github.com/uvipen/Super-mario-bros-PPO-pytorch)
+* [mario-ai-challenge](https://github.com/karaage0703/mario-ai-challenge)

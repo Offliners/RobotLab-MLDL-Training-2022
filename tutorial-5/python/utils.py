@@ -105,5 +105,5 @@ def tester(args, env, model):
     ani = matplotlib.animation.FuncAnimation(plt.gcf(), animate, frames=len(frames_new), interval = 50)
     plt.close()
 
-    FFwriter = animation.FFMpegWriter(fps=10, extra_args=['-vcodec', 'mpeg4'])
+    FFwriter = animation.FFMpegWriter(fps=20, extra_args=['-vcodec', 'mpeg4'])
     ani.save(os.path.join(args.output_video, f'video_world_{args.world}_{args.stage}.mp4'), writer=FFwriter)
