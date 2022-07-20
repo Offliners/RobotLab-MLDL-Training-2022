@@ -52,9 +52,9 @@ python/
 ## Help
 ```shell
 $ python main.py --help
-usage: main.py [-h] [--seed SEED] [--world WORLD] [--stage STAGE] [--render RENDER] [--version VERSION] [--action_type ACTION_TYPE] [--lr LR] [--gamma GAMMA] [--tau TAU] [--beta BETA]
-               [--num_local_steps NUM_LOCAL_STEPS] [--num_global_steps NUM_GLOBAL_STEPS] [--num_processes NUM_PROCESSES] [--save_interval SAVE_INTERVAL] [--max_actions MAX_ACTIONS]
-               [--save_model_dir SAVE_MODEL_DIR] [--tensorboard TENSORBOARD] [--output_video OUTPUT_VIDEO] [--use_pretrained USE_PRETRAINED]
+usage: main.py [-h] [--seed SEED] [--world WORLD] [--stage STAGE] [--version VERSION] [--action_type ACTION_TYPE] [--num_skip_frame NUM_SKIP_FRAME] [--downsample_rate DOWNSAMPLE_RATE]
+               [--num_stack_frame NUM_STACK_FRAME] [--total_timestep TOTAL_TIMESTEP] [--max_step MAX_STEP] [--step STEP] [--episode EPISODE] [--lr LR] [--epoch EPOCH] [--batchsize BATCHSIZE]
+               [--gamma GAMMA] [--check_freq CHECK_FREQ] [--save_model_dir SAVE_MODEL_DIR] [--tensorboard TENSORBOARD] [--output_video OUTPUT_VIDEO]
 
 Robotlab MLDL Training Tutorial 5 - Super Mario
 
@@ -63,28 +63,31 @@ optional arguments:
   --seed SEED           Set random seed
   --world WORLD         Set a number in {1, 2, 3, 4, 5, 6, 7, 8} indicating the world
   --stage STAGE         Set a number in {1, 2, 3, 4} indicating the stage within a world
-  --render RENDER       Whether to render the environment
   --version VERSION     Set a number in {0, 1, 2, 3} specifying the ROM mode to use
   --action_type ACTION_TYPE
-                        Set game difficulty in {right_only, simple, complex}
+                        Set mario action type in {right, simple, complex}
+  --num_skip_frame NUM_SKIP_FRAME
+                        Set number of environment skip frame
+  --downsample_rate DOWNSAMPLE_RATE
+                        Set rate of environment downsample
+  --num_stack_frame NUM_STACK_FRAME
+                        Set number of environment stack frame
+  --total_timestep TOTAL_TIMESTEP
+                        Set total training timestep
+  --max_step MAX_STEP   Set maximum of step
+  --step STEP           Set number of steps to run for each environment
+  --episode EPISODE     Set number of episode
   --lr LR               Set learning rate
+  --epoch EPOCH         Set training epochs
+  --batchsize BATCHSIZE
+                        Set training batchsize
   --gamma GAMMA         Set discount factor for rewards
-  --tau TAU             Set parameter for GAE
-  --beta BETA           Set entropy coefficient
-  --num_local_steps NUM_LOCAL_STEPS
-  --num_global_steps NUM_GLOBAL_STEPS
-  --num_processes NUM_PROCESSES
-                        Set the number of processes
-  --save_interval SAVE_INTERVAL
-                        Set number of steps between savings
-  --max_actions MAX_ACTIONS
-                        Set maximum repetition steps in test phase
+  --check_freq CHECK_FREQ
+                        Set frequency to save model weight
   --save_model_dir SAVE_MODEL_DIR
                         Path of saved model directory
   --tensorboard TENSORBOARD
                         Path of tensorboard
   --output_video OUTPUT_VIDEO
                         Path of output vidoe directory
-  --use_pretrained USE_PRETRAINED
-                        Whether to use pretrained model weight
 ```
