@@ -1,6 +1,6 @@
 import os
 from opt import parse
-from utils import same_seed, eval, TrainCallback
+from utils import same_seed, TrainCallback
 import torch
 from env import create_env
 from model import creat_model

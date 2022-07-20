@@ -4,6 +4,7 @@ import gym_super_mario_bros
 import gym
 from nes_py.wrappers import JoypadSpace
 from gym.wrappers import GrayScaleObservation
+from gym_super_mario_bros.actions import SIMPLE_MOVEMENT, COMPLEX_MOVEMENT, RIGHT_ONLY
 from stable_baselines3.common.vec_env import VecFrameStack, DummyVecEnv
 
 class SkipFrame(gym.Wrapper):
@@ -35,52 +36,6 @@ class Downsample(gym.ObservationWrapper):
         return frame
 
 
-class DeadlockEnv(gym.Wrapper):
-    def __init__(self, env, threshold=20):
-        super().__init__(env)
-        self.last_x_pos = 0
-        self.max_x_pos = 0
-        self.count = 0
-        self.threshold = threshold
-        
-    def reset(self, **kwargs):
-        self.last_x_pos = 0
-        self.max_x_pos = 0
-        self.count = 0
-        return self.env.reset(**kwargs)
-    
-    def step(self, action):
-        state, reward, done, info = self.env.step(action)
-        x_pos, y_pos = info['x_pos'], info['y_pos']
-        
-        if self.max_x_pos > 3600 and x_pos < 1080:
-            x_pos += 4000
-        elif x_pos >= 4152:
-            x_pos += 1000
-        
-        if x_pos > self.max_x_pos:
-            info['max_x_pos'] = self.max_x_pos = x_pos
-        else:
-            info['max_x_pos'] = self.max_x_pos
-        
-        if x_pos <= self.last_x_pos:
-            self.count += 1
-        else:
-            self.count = 0
-            
-        if self.count >= self.threshold or (
-            x_pos < self.last_x_pos - 500 and (self.max_x_pos < 1200 or self.max_x_pos >= 1848)) or (
-            self.max_x_pos >= 1200 and 300 <= x_pos < 1200 or (
-            2290 < x_pos < 3128 and y_pos < 127) or (
-            2450 < x_pos < 3128) or (
-            3670 < x_pos < 3849)):
-            reward = -15
-            done = True
-        
-        self.last_x_pos = x_pos        
-        return state, reward, done, info
-
-
 class CustomRewardEnv(gym.Wrapper):
     def __init__(self, env):
         super().__init__(env)
@@ -98,9 +53,18 @@ class CustomRewardEnv(gym.Wrapper):
 
 def create_env(args):
     env = gym_super_mario_bros.make(f'SuperMarioBros-{args.world}-{args.stage}-v{args.version}')
-    env = JoypadSpace(env, [["right", "B"], ["right", "A", "B"], ["down"]])
+
+    if args.action_type == "right":
+        actions = RIGHT_ONLY
+    elif args.action_type == "simple":
+        actions = SIMPLE_MOVEMENT
+    elif args.action_type == 'complex':
+        actions = COMPLEX_MOVEMENT
+    else:
+        print('Unknown action type!')
+
+    env = JoypadSpace(env, actions)
     env = SkipFrame(env, skip=args.num_skip_frame)
-    env = DeadlockEnv(env, threshold=40)
     env = CustomRewardEnv(env)
     env = GrayScaleObservation(env, keep_dim=True)
     env = Downsample(env, args.downsample_rate)

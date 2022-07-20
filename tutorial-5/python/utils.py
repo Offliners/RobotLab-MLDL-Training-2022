@@ -42,21 +42,20 @@ class TrainCallback(BaseCallback):
                 done = False
                 total_reward[i] = 0
                 total_time[i] = 0
-                while not done and total_time[i] < self.args.max_timestep_test:
+                while not done and total_time[i] < self.args.max_step:
                     action, _ = self.model.predict(state)
                     state, reward, done, info = self.env.step(action)
+                    total_reward[i] += reward[0]
                     total_time[i] += 1
 
-                total_reward[i] = info[0]['max_x_pos']
                 if total_reward[i] > best_reward:
                     best_reward = total_reward[i]
 
                 state = self.env.reset()
 
-            reward_avg = sum(total_reward) / n_episodes
-            print('time steps:', self.n_calls, '/', self.args.total_timestep, '\t',
-                  'average reward:', reward_avg, '\t',
-                  'best reward:', best_reward)
+            reward_avg = round(sum(total_reward) / n_episodes, 3)
+            best_reward = round(best_reward, 3)
+            print(f'[ Train | {self.n_calls}/{self.args.total_timestep} ] average reward = {reward_avg}, best reward = {best_reward}')
 
             self.writer.add_scalars('Reward', {'average reward' : reward_avg, 'best reward' : best_reward}, self.n_calls)
 
@@ -66,31 +65,35 @@ class TrainCallback(BaseCallback):
 def tester(args, env, model):
     n_episodes = args.episode
     total_reward = [0] * n_episodes
-    total_time = [0] * n_episodes
+    total_action = [0] * n_episodes
     best_reward = 0
     frames_best = []
     for i in range(n_episodes):
         state = env.reset()
         done = False
         total_reward[i] = 0
-        total_time[i] = 0
+        total_action[i] = 0
         frames = []
-        while not done and total_time[i] < args.max_timestep_test:
+        while not done and total_action[i] < args.max_step:
             action, _ = model.predict(state)
             state, reward, done, info = env.step(action)
             total_reward[i] += reward[0]
-            total_time[i] += 1
+            total_action[i] += 1
             frames.append(copy.deepcopy(env.render(mode='rgb_array')))
+
+            if info[0]["flag_get"]:
+                print("World {} stage {} completed".format(args.world, args.stage))
+                break 
 
         if total_reward[i] > best_reward:
             best_reward = total_reward[i]
             frames_best = copy.deepcopy(frames)
 
-        print('test episode:', i, 'reward:', total_reward[i], 'time:', total_time[i])
+        print(f'[ Test | {i + 1}/{n_episodes} ] reward = {round(total_reward[i], 3)}, action step = {total_action[i]}')
 
-    print('average reward:', (sum(total_reward) / n_episodes),
-        'average time:', (sum(total_time) / n_episodes),
-        'best_reward:', best_reward)
+    avg_action_step = round(sum(total_action) / n_episodes, 3)
+    avg_reward = round(sum(total_reward) / n_episodes, 3)
+    print(f'average reward = {avg_reward}, average action step = {avg_action_step}, best_reward = {round(best_reward, 3)}')
 
     frames_new = np.array(frames_best)
     matplotlib.rcParams['animation.embed_limit'] = 2**128
@@ -102,5 +105,5 @@ def tester(args, env, model):
     ani = matplotlib.animation.FuncAnimation(plt.gcf(), animate, frames=len(frames_new), interval = 50)
     plt.close()
 
-    FFwriter = animation.FFMpegWriter(fps=30, extra_args=['-vcodec', 'mpeg4'])
+    FFwriter = animation.FFMpegWriter(fps=10, extra_args=['-vcodec', 'mpeg4'])
     ani.save(os.path.join(args.output_video, f'video_world_{args.world}_{args.stage}.mp4'), writer=FFwriter)
