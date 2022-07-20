@@ -1,13 +1,13 @@
+import os
 import random
+import copy
 import numpy as np
-from model import ActorCritic
-from environment import create_train_env
+import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import matplotlib
+from stable_baselines3.common.callbacks import BaseCallback
 import torch
-import torch.nn.functional as F
-from torch.distributions import Categorical
-from collections import deque
 from torch.utils.tensorboard import SummaryWriter
-import timeit
 
 def same_seed(seed): 
     random.seed(seed)
@@ -20,170 +20,87 @@ def same_seed(seed):
         torch.cuda.manual_seed_all(seed)
 
 
-class GlobalAdam(torch.optim.Adam):
-    def __init__(self, params, lr):
-        super(GlobalAdam, self).__init__(params, lr=lr)
-        for group in self.param_groups:
-            for p in group['params']:
-                state = self.state[p]
-                state['step'] = 0
-                state['exp_avg'] = torch.zeros_like(p.data)
-                state['exp_avg_sq'] = torch.zeros_like(p.data)
+class TrainCallback(BaseCallback):
+    def __init__(self, args, env, model, verbose=1):
+        super(TrainCallback, self).__init__(verbose)
+        self.args = args
+        self.env = env
+        self.model = model
+        self.writer = SummaryWriter(args.tensorboard)
 
-                state['exp_avg'].share_memory_()
-                state['exp_avg_sq'].share_memory_()
+    def _on_step(self):
+        n_episodes = self.args.episode
+        if self.n_calls % self.args.check_freq == 0:
+            model_path = os.path.join(self.args.save_model_dir, 'mario_world_{}_{}.pth'.format(self.args.world, self.args.stage))
+            self.model.save(model_path)
 
+            total_reward = [0] * n_episodes
+            total_time = [0] * n_episodes
+            best_reward = 0
+            for i in range(n_episodes):
+                state = self.env.reset()
+                done = False
+                total_reward[i] = 0
+                total_time[i] = 0
+                while not done and total_time[i] < self.args.max_timestep_test:
+                    action, _ = self.model.predict(state)
+                    state, reward, done, info = self.env.step(action)
+                    total_time[i] += 1
 
-def trainer(index, opt_args, global_model, optimizer, device, save=False):
-    torch.manual_seed(opt_args.seed + index)
-    if save:
-        start_time = timeit.default_timer()
+                total_reward[i] = info[0]['max_x_pos']
+                if total_reward[i] > best_reward:
+                    best_reward = total_reward[i]
 
-    writer = SummaryWriter(opt_args.tensorboard)
-    env, num_states, num_actions = create_train_env(opt_args.world, opt_args.stage, opt_args.action_type)
-    local_model = ActorCritic(num_states, num_actions).to(device)
+                state = self.env.reset()
 
-    local_model.train()
-    state = torch.from_numpy(env.reset())
-    state = state.to(device)
+            reward_avg = sum(total_reward) / n_episodes
+            print('time steps:', self.n_calls, '/', self.args.total_timestep, '\t',
+                  'average reward:', reward_avg, '\t',
+                  'best reward:', best_reward)
 
-    done = True
-    curr_step = 0
-    curr_episode = 0
-    while True:
-        if save:
-            if curr_episode % opt_args.save_interval == 0 and curr_episode > 0:
-                torch.save(global_model.state_dict(),
-                           "{}/a3c_mario_{}_{}.pth".format(opt_args.save_model_dir, opt_args.world, opt_args.stage))
+            self.writer.add_scalars('Reward', {'average reward' : reward_avg, 'best reward' : best_reward}, self.n_calls)
 
-            print("Process {}. Episode {}".format(index, curr_episode))
-        
-        curr_episode += 1
-        local_model.load_state_dict(global_model.state_dict())
-        if done:
-            h_0 = torch.zeros((1, 512), dtype=torch.float)
-            c_0 = torch.zeros((1, 512), dtype=torch.float)
-        else:
-            h_0 = h_0.detach()
-            c_0 = c_0.detach()
-
-        h_0 = h_0.to(device)
-        c_0 = c_0.to(device)
-
-        log_policies = []
-        values = []
-        rewards = []
-        entropies = []
-        for _ in range(opt_args.num_local_steps):
-            curr_step += 1
-            logits, value, h_0, c_0 = local_model(state, h_0, c_0)
-            policy = F.softmax(logits, dim=1)
-            log_policy = F.log_softmax(logits, dim=1)
-            entropy = -(policy * log_policy).sum(1, keepdim=True)
-
-            m = Categorical(policy)
-            action = m.sample().item()
-
-            state, reward, done, _ = env.step(action)
-            state = torch.from_numpy(state)
-            state = state.to(device)
-                
-            if curr_step > opt_args.num_global_steps:
-                done = True
-
-            if done:
-                curr_step = 0
-                state = torch.from_numpy(env.reset())
-                state = state.to(device)
-
-            values.append(value)
-            log_policies.append(log_policy[0, action])
-            rewards.append(reward)
-            entropies.append(entropy)
-
-            if done:
-                break
-
-        R = torch.zeros((1, 1), dtype=torch.float)
-        R = R.to(device)
-        
-        if not done:
-            _, R, _, _ = local_model(state, h_0, c_0)
-
-        gae = torch.zeros((1, 1), dtype=torch.float)
-        gae = gae.to(device)
-        actor_loss = 0
-        critic_loss = 0
-        entropy_loss = 0
-        next_value = R
-        for value, log_policy, reward, entropy in list(zip(values, log_policies, rewards, entropies))[::-1]:
-            gae = gae * opt_args.gamma * opt_args.tau
-            gae = gae + reward + opt_args.gamma * next_value.detach() - value.detach()
-            next_value = value
-            actor_loss = actor_loss + log_policy * gae
-            R = R * opt_args.gamma + reward
-            critic_loss = critic_loss + (R - value) ** 2 / 2
-            entropy_loss = entropy_loss + entropy
-
-        total_loss = -actor_loss + critic_loss - opt_args.beta * entropy_loss
-        writer.add_scalar("Train/Process{}_loss".format(index), total_loss, curr_episode)
-        optimizer.zero_grad()
-        total_loss.backward()
-
-        for local_param, global_param in zip(local_model.parameters(), global_model.parameters()):
-            if global_param.grad is not None:
-                break
-            global_param._grad = local_param.grad
-
-        optimizer.step()
-
-        if curr_episode == int(opt_args.num_global_steps / opt_args.num_local_steps):
-            print("Training process {} terminated".format(index))
-            if save:
-                end_time = timeit.default_timer()
-                print('Time usage %.2f s ' % (end_time - start_time))
-            
-            return
+        return True
 
 
-def tester(index, opt_args, global_model):
-    torch.manual_seed(opt_args.seed + index)
-    env, num_states, num_actions = create_train_env(opt_args.world, opt_args.stage, opt_args.action_type)
-    local_model = ActorCritic(num_states, num_actions)
-    local_model.eval()
-    state = torch.from_numpy(env.reset())
+def tester(args, env, model):
+    n_episodes = args.episode
+    total_reward = [0] * n_episodes
+    total_time = [0] * n_episodes
+    best_reward = 0
+    frames_best = []
+    for i in range(n_episodes):
+        state = env.reset()
+        done = False
+        total_reward[i] = 0
+        total_time[i] = 0
+        frames = []
+        while not done and total_time[i] < args.max_timestep_test:
+            action, _ = model.predict(state)
+            state, reward, done, info = env.step(action)
+            total_reward[i] += reward[0]
+            total_time[i] += 1
+            frames.append(copy.deepcopy(env.render(mode='rgb_array')))
 
-    done = True
-    curr_step = 0
-    actions = deque(maxlen=opt_args.max_actions)
-    while True:
-        curr_step += 1
-        if done:
-            local_model.load_state_dict(global_model.state_dict())
-        with torch.no_grad():
-            if done:
-                h_0 = torch.zeros((1, 512), dtype=torch.float)
-                c_0 = torch.zeros((1, 512), dtype=torch.float)
-            else:
-                h_0 = h_0.detach()
-                c_0 = c_0.detach()
+        if total_reward[i] > best_reward:
+            best_reward = total_reward[i]
+            frames_best = copy.deepcopy(frames)
 
-        logits, value, h_0, c_0 = local_model(state, h_0, c_0)
-        policy = F.softmax(logits, dim=1)
-        action = torch.argmax(policy).item()
-        state, reward, done, _ = env.step(action)
-        
-        if opt_args.render:
-            env.render()
+        print('test episode:', i, 'reward:', total_reward[i], 'time:', total_time[i])
 
-        actions.append(action)
-        
-        if curr_step > opt_args.num_global_steps or actions.count(actions[0]) == actions.maxlen:
-            done = True
-        
-        if done:
-            curr_step = 0
-            actions.clear()
-            state = env.reset()
+    print('average reward:', (sum(total_reward) / n_episodes),
+        'average time:', (sum(total_time) / n_episodes),
+        'best_reward:', best_reward)
 
-        state = torch.from_numpy(state)
+    frames_new = np.array(frames_best)
+    matplotlib.rcParams['animation.embed_limit'] = 2**128
+    plt.figure(figsize=(frames[0].shape[1] / 72.0, frames[0].shape[0] / 72.0), dpi = 72)
+    patch = plt.imshow(frames_new[0])
+    plt.axis('off')
+    plt.tight_layout(pad=0, h_pad=0, w_pad=0)
+    animate = lambda i: patch.set_data(frames_new[i])
+    ani = matplotlib.animation.FuncAnimation(plt.gcf(), animate, frames=len(frames_new), interval = 50)
+    plt.close()
+
+    FFwriter = animation.FFMpegWriter(fps=30, extra_args=['-vcodec', 'mpeg4'])
+    ani.save(os.path.join(args.output_video, f'video_world_{args.world}_{args.stage}.mp4'), writer=FFwriter)
