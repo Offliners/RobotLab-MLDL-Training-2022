@@ -84,7 +84,7 @@ Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook](https://github.co
 
 Environment : [gym-super-mario-bros](https://github.com/Kautenja/gym-super-mario-bros)
 
-Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab]()]
+Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook](https://github.com/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-5/colab/tutorial-5.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-5/colab/tutorial-5.ipynb)]
 
 ## References
 * [Pytorch official tutorials](https://pytorch.org/tutorials/)
