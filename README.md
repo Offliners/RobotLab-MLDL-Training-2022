@@ -69,7 +69,7 @@ Dataset Resource : [Crypko](https://crypko.ai/#)
 Links : [[README](./tutorial-4/README.md)] [[Jupyter Notebook](https://github.com/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-4/colab/tutorial-4.ipynb)] [[Google Colab](https://colab.research.google.com/github/Offliners/RobotLab-MLDL-Training-2022/blob/main/tutorial-4/colab/tutorial-4.ipynb)]
 
 ## Tutorial 5 - Super Mario
-使用A3C來訓練模型完成Super Mario任務
+使用PPO策略來訓練模型完成Super Mario任務
 
 |World/Stage|1|2|3|4|
 |-|-|-|-|-|
@@ -92,4 +92,4 @@ Links : [[README](./tutorial-5/README.md)] [[Jupyter Notebook]()] [[Google Colab
 * [NTU Machine Learning 2022 Spring (EE5184, by Prof. Hung-yi Lee)](https://speech.ee.ntu.edu.tw/~hylee/ml/2022-spring.php)
 * [MIT Deep Learning and Artificial Intelligence Lectures](https://github.com/lexfridman/mit-deep-learning)
 * [UNet/FCN PyTorch](https://github.com/usuyama/pytorch-unet)
-* [Super-mario-bros-A3C-pytorch](https://github.com/uvipen/Super-mario-bros-A3C-pytorch)
+* [Super-mario-bros-PPO-pytorch](https://github.com/uvipen/Super-mario-bros-PPO-pytorch)
