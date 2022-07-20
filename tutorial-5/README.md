@@ -15,25 +15,39 @@
 ```shell
 $ cd python
 
-# 開始訓練
+# 開始訓練(預設是World 1-1)
 $ python main.py
 
 # 針對特定World或者Stage進行訓練
 $ python main.py --world {index of world (1~8)} --stage {index of stage (1~4)}
 
-# 訓練完成後可以看表現如何
+# 訓練完成後可以看表現如何(預設是World 1-1)
 $ python eval.py
 
 # 針對特定World或者Stage看表現如何
 $ python eval.py --world {index of world (1~8)} --stage {index of stage (1~4)}
 ```
 
-使用Tensorboard來觀看各個Process的Loss
+使用Tensorboard來觀看模型的Reward，以及PPO模型的其他參數變化
 ```shell
 $ tensorboard --logdir=./checkpoints/tensorboard/
 ```
 
 ![tensorboard](./img/tutorial-5-tensorboard.png)
+
+產生的資料夾內容
+```shell
+python/
+    checkpoints/
+        model/
+            mario_world_{index of world}_{index of stage}.pth
+        tensorboard/
+        video/
+            video_world_{index of world}_{index of stage}.mp4
+    data/
+        0.jpg
+        ...
+```
 
 ## Help
 ```shell
