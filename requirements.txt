@@ -8,8 +8,9 @@ torchsummary
 randaugment
 gdown
 tensorboard
-gym
-gym-super-mario-bros
+stable-baselines3==1.6.0
+gym==0.21.0
+gym-super-mario-bros==7.3.0
 
 --find-links https://download.pytorch.org/whl/torch_stable.html
 torch==1.11.0+cu113
