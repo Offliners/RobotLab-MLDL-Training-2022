@@ -42,6 +42,9 @@ python/
         model/
             mario_world_{index of world}_{index of stage}.pth
         tensorboard/
+            PPO_1/
+            Reward_average reward/
+            Reward_best reward/
     video/
         video_world_{index of world}_{index of stage}.mp4
 ```
