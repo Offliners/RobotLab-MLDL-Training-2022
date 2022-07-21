@@ -24,7 +24,7 @@ $ cd RobotLab-MLDL-Training-2022
 # 安裝此專案所需的所有函式庫
 $ pip install -r requirements.txt
 
-# 前往想要訓練的教程
+# 前往想要訓練的範例
 $ cd tutorial-x
 
 # 完成訓練後即可關閉虛擬環境
