@@ -44,9 +44,6 @@ python/
         tensorboard/
         video/
             video_world_{index of world}_{index of stage}.mp4
-    data/
-        0.jpg
-        ...
 ```
 
 ## Help
