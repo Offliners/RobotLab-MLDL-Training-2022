@@ -42,8 +42,8 @@ python/
         model/
             mario_world_{index of world}_{index of stage}.pth
         tensorboard/
-        video/
-            video_world_{index of world}_{index of stage}.mp4
+    video/
+        video_world_{index of world}_{index of stage}.mp4
 ```
 
 ## Help
