@@ -34,6 +34,33 @@ $ conda deactivate
 $ conda env remove -n training
 ```
 
+## Useful Tips for Google Colab
+### Prevent Google Colab from disconnecting (valid utill 2022/07/23)
+Press `F12`，and enter this code in console，then press `enter`
+```javascript
+function ClickConnect(){
+  console.log("Connnect Clicked - Start"); 
+  document.querySelector("#top-toolbar > colab-connect-button").shadowRoot.querySelector("#connect").click();
+  console.log("Connnect Clicked - End"); 
+};
+setInterval(ClickConnect, 60000)
+```
+
+### Auto save output file on Google Colab
+insert code cell at the bottom
+```python
+from google.colab import files
+files.download("output_file.csv")  # "output_file.csv" must be your output file name
+```
+
+### Display information of GPU of Google Colab
+insert code cell to check which GPU is assigned
+```shell
+!nvidia-smi
+```
+### "Sorry, something went wrong. Reload?" when viewing *.ipynb on Github
+Copy the URL to https://nbviewer.jupyter.org/
+
 ## Tutorial 1 - Covid19 Cases Prediction
 透過相關係數的分析，選出重要的特徵來訓練模型做Covid19 Cases Prediction
 
