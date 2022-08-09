@@ -3,8 +3,6 @@
 # NTUME Robot Lab - ML/DL Training
 2022/07/23 released
 
-Report : [pdf](20220723_training.pdf)
-
 ## Environment
 * Python 3.8.13
 * CUDA 11.3
